@@ -1,0 +1,23 @@
+{
+  "name": "prisma-schema-corrector",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "vitest run"
+  },
+  "keywords": [
+    "prisma"
+  ],
+  "author": "onozaty",
+  "license": "MIT",
+  "dependencies": {
+    "@prisma/internals": "^6.0.0"
+  },
+  "devDependencies": {
+    "prettier": "^3.4.2",
+    "typescript": "^5.7.3",
+    "vitest": "^3.0.5"
+  }
+}

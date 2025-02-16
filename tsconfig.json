@@ -6,7 +6,7 @@
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "strict": true,
-    "noEmit": true,
+    "noEmit": false,
     "skipLibCheck": true,
     "sourceMap": true,
     "moduleResolution": "node",

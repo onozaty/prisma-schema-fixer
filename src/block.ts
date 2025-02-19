@@ -12,9 +12,9 @@ export type BlockType = (typeof BlockType)[number];
 
 export class Block {
   readonly type: BlockType;
-  contents: string[];
-  constructor(type: BlockType, contents: string[] = []) {
+  lines: string[];
+  constructor(type: BlockType, lines: string[] = []) {
     this.type = type;
-    this.contents = contents;
+    this.lines = lines;
   }
 }

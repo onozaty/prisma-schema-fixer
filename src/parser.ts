@@ -7,20 +7,20 @@ export const parseBlocks = (schemaContent: string): Block[] => {
   for (const line of lines) {
     const judgeResult = judgeLine(line);
     if (judgeResult.result === "Start") {
-      if (currentBlock.contents.length > 0) {
+      if (currentBlock.lines.length > 0) {
         blocks.push(currentBlock);
       }
       currentBlock = judgeResult.newBlock;
-      currentBlock.contents.push(line);
+      currentBlock.lines.push(line);
     } else if (judgeResult.result === "End") {
-      currentBlock.contents.push(line);
+      currentBlock.lines.push(line);
       blocks.push(currentBlock);
       currentBlock = new Block("none");
     } else {
-      currentBlock.contents.push(line);
+      currentBlock.lines.push(line);
     }
   }
-  if (currentBlock.contents.length > 0) {
+  if (currentBlock.lines.length > 0) {
     blocks.push(currentBlock);
   }
   return blocks;

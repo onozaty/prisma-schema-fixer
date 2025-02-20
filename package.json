@@ -15,16 +15,20 @@
   "author": "onozaty",
   "license": "MIT",
   "dependencies": {
-    "@prisma/internals": "^6.0.0"
+    "@prisma/internals": "^6.0.0",
+    "change-case": "^5.4.4",
+    "pluralize": "^8.0.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.20.0",
     "@types/node": "^22.13.4",
+    "@types/pluralize": "^0.0.33",
+    "@vitest/coverage-v8": "^3.0.6",
     "eslint": "^9.20.1",
     "globals": "^15.15.0",
     "prettier": "^3.4.2",
     "typescript": "^5.7.3",
     "typescript-eslint": "^8.24.0",
-    "vitest": "^3.0.5"
+    "vitest": "^3.0.6"
   }
 }

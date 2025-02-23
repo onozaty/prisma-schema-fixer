@@ -36,4 +36,13 @@ describe("isTarget", () => {
     // Act/Assert
     expect(isTarget(targets, name)).toBe(false);
   });
+
+  test("should return true if targets is undefined", () => {
+    // Arrange
+    const targets: Targets = undefined;
+    const name = "AnyName";
+
+    // Act/Assert
+    expect(isTarget(targets, name)).toBe(true);
+  });
 });

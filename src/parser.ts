@@ -46,7 +46,7 @@ const judgeLine = (line: string): JudegeLineResult => {
 
     const blockType = BlockType.includes(type as BlockType)
       ? (type as BlockType)
-      : "none";
+      : "other";
     return { result: "Start", newBlock: new Block(blockType) };
   }
 

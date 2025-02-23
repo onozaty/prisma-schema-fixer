@@ -1,7 +1,7 @@
-import { Case, changeCase, changeForm, Form } from "./transform";
+import { Case, changeCase, changeForm, Form } from "./string-transform";
 
 describe("changeCase", () => {
-  test("should convert string to pascal case", () => {
+  test("pascal", () => {
     // Arrange
     const str = "hello_world";
     const to: Case = "pascal";
@@ -10,7 +10,7 @@ describe("changeCase", () => {
     expect(changeCase(str, to)).toBe("HelloWorld");
   });
 
-  test("should convert string to camel case", () => {
+  test("camel", () => {
     // Arrange
     const str = "hello_world";
     const to: Case = "camel";
@@ -19,7 +19,7 @@ describe("changeCase", () => {
     expect(changeCase(str, to)).toBe("helloWorld");
   });
 
-  test("should convert string to snake case", () => {
+  test("snake", () => {
     // Arrange
     const str = "HelloWorld";
     const to: Case = "snake";
@@ -30,7 +30,7 @@ describe("changeCase", () => {
 });
 
 describe("changeForm", () => {
-  test("should convert string to singular form", () => {
+  test("singular", () => {
     // Arrange
     const str = "users";
     const to: Form = "singular";
@@ -39,7 +39,7 @@ describe("changeForm", () => {
     expect(changeForm(str, to)).toBe("user");
   });
 
-  test("should convert string to plural form", () => {
+  test("plural", () => {
     // Arrange
     const str = "user";
     const to: Form = "plural";

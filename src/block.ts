@@ -5,6 +5,7 @@ export const BlockType = [
   "model",
   "enum",
   "type",
+  "other",
   "none",
 ] as const;
 

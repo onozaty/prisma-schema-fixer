@@ -52,6 +52,59 @@ describe("parseBlocks", () => {
       new Block("enum", ["enum Role {", "  USER", "  ADMIN", "}"]),
     ]);
   });
+
+  test("view", async () => {
+    // Arrange
+    const schemaContent = readFixture("view.prisma");
+
+    // Act
+    const blocks = parseBlocks(schemaContent);
+
+    // Assert
+    expect(blocks).toEqual([
+      new Block("datasource", [
+        "datasource db {",
+        '  provider = "postgresql"',
+        '  url      = env("DATABASE_URL")',
+        "}",
+      ]),
+      new Block("none", [""]),
+      new Block("generator", [
+        "generator client {",
+        '  provider        = "prisma-client-js"',
+        '  previewFeatures = ["views"]',
+        "}",
+      ]),
+      new Block("none", [""]),
+      new Block("model", [
+        "model User {",
+        "  id      Int      @id @default(autoincrement())",
+        "  email   String   @unique",
+        "  name    String?",
+        "  profile Profile?",
+        "}",
+      ]),
+      new Block("none", [""]),
+      new Block("model", [
+        "model Profile {",
+        "  id     Int    @id @default(autoincrement())",
+        "  bio    String",
+        "  user   User   @relation(fields: [userId], references: [id])",
+        "  userId Int    @unique",
+        "}",
+      ]),
+      new Block("none", [""]),
+      new Block("other", [
+        "view UserInfo {",
+        "  id    Int    @unique",
+        "  email String",
+        "  name  String",
+        "  bio   String",
+        "}",
+      ]),
+      new Block("none", [""]),
+    ]);
+  });
 });
 
 const readFixture = (name: string): string => {

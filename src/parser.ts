@@ -52,3 +52,7 @@ const judgeLine = (line: string): JudegeLineResult => {
 
   return { result: "Continue" };
 };
+
+export const joinBlocks = (blocks: Block[]): string => {
+  return blocks.map((block) => block.lines.join("\n")).join("\n");
+};

@@ -1,4 +1,7 @@
-datasource db {
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`correction > model-name 1`] = `
+"datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
@@ -7,24 +10,24 @@ generator client {
   provider = "prisma-client-js"
 }
 
-model Users {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  email     String   @unique
-  role      Role     @default(USER)
+model User {
+  id        Int          @id @default(autoincrement())
+  createdAt DateTime     @default(now())
+  email     String       @unique
+  role      Role         @default(USER)
   posts     Post[]
   profile   UserProfile?
 }
 
-model userProfile {
-  id     Int    @id @default(autoincrement())
+model UserProfile {
+  id     Int     @id @default(autoincrement())
   name   String?
   bio    String?
-  user   User   @relation(fields: [userId], references: [id])
-  userId Int    @unique
+  user   User    @relation(fields: [userId], references: [id])
+  userId Int     @unique
 }
 
-model post {
+model Post {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -38,3 +41,5 @@ enum Role {
   USER
   ADMIN
 }
+"
+`;

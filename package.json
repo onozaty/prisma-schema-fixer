@@ -1,5 +1,5 @@
 {
-  "name": "prisma-schema-corrector",
+  "name": "prisma-schema-fixer",
   "version": "1.0.0",
   "description": "",
   "type": "module",

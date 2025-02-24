@@ -1,1 +1,1 @@
-# prisma-schema-corrector
+# prisma-schema-fixer

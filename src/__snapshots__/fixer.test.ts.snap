@@ -1,6 +1,6 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`correction > model-name 1`] = `
+exports[`fix > model-name 1`] = `
 "datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")

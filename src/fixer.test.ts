@@ -1,9 +1,9 @@
 import fs from "fs";
 import path from "path";
 import { defineConfig } from "./config";
-import { correction } from "./corrector";
+import { fix } from "./fixer";
 
-describe("correction", () => {
+describe("fix", () => {
   test("model-name", async () => {
     // Arrange
     const content = readFixture("simple.prisma");
@@ -19,7 +19,7 @@ describe("correction", () => {
     });
 
     // Act
-    const result = await correction(content, config);
+    const result = await fix(content, config);
 
     // Assert
     expect(result).toMatchSnapshot();

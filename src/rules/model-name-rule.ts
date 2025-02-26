@@ -1,5 +1,5 @@
 import { Block } from "../block";
-import { changeBlockName } from "../transform/line-transform";
+import { changeBlockName } from "../transform/block-transform";
 import {
   Case,
   changeCase,
@@ -20,7 +20,7 @@ export namespace ModelNameRule {
       return;
     }
 
-    block.lines[0] = changeBlockName(block.lines[0], (beforeName: string) => {
+    changeBlockName(block, (beforeName: string) => {
       const config = selectConfig(configs, beforeName);
       if (config === undefined) {
         return beforeName;

@@ -6,7 +6,7 @@ import {
   changeForm,
   Form,
 } from "../transform/string-transform";
-import { isTarget, Targets } from "./rule";
+import { selectConfigByName, Targets } from "./rule";
 
 export namespace ModelMapRule {
   export type Config = {
@@ -21,7 +21,7 @@ export namespace ModelMapRule {
     }
 
     changeBlockMap(block, (blockName: string) => {
-      const config = selectConfig(configs, blockName);
+      const config = selectConfigByName(configs, blockName);
       if (config === undefined) {
         return undefined;
       }
@@ -35,15 +35,5 @@ export namespace ModelMapRule {
       }
       return map;
     });
-  };
-
-  const selectConfig = (
-    configs: Config[],
-    name: string,
-  ): Config | undefined => {
-    return configs
-      .slice()
-      .reverse()
-      .find((config) => isTarget(config.targets, name));
   };
 }

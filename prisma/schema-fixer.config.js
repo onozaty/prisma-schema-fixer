@@ -6,5 +6,11 @@ export default {
         form: "singular",
       },
     ],
+    "model-map": [
+      {
+        case: "snake",
+        form: "plural",
+      },
+    ],
   },
 };

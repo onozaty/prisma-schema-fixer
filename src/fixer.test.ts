@@ -24,6 +24,26 @@ describe("fix", () => {
     // Assert
     expect(result).toMatchSnapshot();
   });
+  test("model-map", async () => {
+    // Arrange
+    const content = readFixture("simple.prisma");
+    const config = defineConfig({
+      rules: {
+        "model-map": [
+          {
+            case: "snake",
+            form: "plural",
+          },
+        ],
+      },
+    });
+
+    // Act
+    const result = await fix(content, config);
+
+    // Assert
+    expect(result).toMatchSnapshot();
+  });
 });
 
 const readFixture = (name: string): string => {

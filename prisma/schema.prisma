@@ -17,20 +17,20 @@ model Users {
 }
 
 model userProfile {
-  id     Int    @id @default(autoincrement())
-  name   String?
-  bio    String?
-  user   User   @relation(fields: [userId], references: [id])
-  userId Int    @unique
+  id      Int    @id @default(autoincrement())
+  name    String?
+  bio     String?
+  user    User   @relation(fields: [user_id], references: [id])
+  user_id Int    @unique
 }
 
 model post {
   id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
+  CreatedAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   published Boolean  @default(false)
   title     String   @db.VarChar(255)
-  author    User?    @relation(fields: [authorId], references: [id])
+  author    Users?   @relation(fields: [authorId], references: [id])
   authorId  Int?
 }
 

@@ -6,11 +6,11 @@ import {
   changeForm,
   Form,
 } from "../transform/string-transform";
-import { selectConfigByName, Targets } from "./rule";
+import { NameTargets, selectConfigByName } from "./rule";
 
 export namespace ModelMapRule {
   export type Config = {
-    targets?: Targets;
+    targets?: NameTargets;
     case?: Case;
     form?: Form;
   };

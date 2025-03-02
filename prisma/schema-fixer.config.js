@@ -12,5 +12,10 @@ export default {
         form: "plural",
       },
     ],
+    "field-name": [
+      {
+        case: "snake",
+      },
+    ],
   },
 };

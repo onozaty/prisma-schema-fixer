@@ -6,11 +6,11 @@ import {
   changeForm,
   Form,
 } from "../transform/string-transform";
-import { selectConfigByName, Targets } from "./rule";
+import { NameTargets, selectConfigByName } from "./rule";
 
 export namespace ModelNameRule {
   export type Config = {
-    targets?: Targets;
+    targets?: NameTargets;
     case?: Case;
     form?: Form;
   };
@@ -23,7 +23,7 @@ export namespace ModelNameRule {
     changeBlockName(block, (beforeName: string) => {
       const config = selectConfigByName(configs, beforeName);
       if (config === undefined) {
-        return beforeName;
+        return undefined;
       }
 
       let afterName = beforeName;

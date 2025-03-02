@@ -6,6 +6,8 @@ const BLOCK_MAP_LINE_REGEX =
   /^(?<before>\s+@@map\(")(?<map>\w+)(?<after>"\).*)$/;
 const FIELD_NAME_LINE_REGEX =
   /^(?<before>\s+)(?<name>[a-zA-Z]\w*)(?<after>\s*.*)$/;
+const FIELD_MAP_LINE_REGEX =
+  /^(?<before>\s+[a-zA-Z]\w*\s+.*\s+@map\(")(?<map>\w+)(?<after>"\).*)$/;
 
 export const changeBlockName = (
   block: Block,
@@ -75,6 +77,31 @@ export const changeFieldName = (
   }
 };
 
+export const changeFieldMap = (
+  block: Block,
+  modifier: (model: string, filed: string) => string | undefined,
+): void => {
+  const model = getBlockName(block.lines[0]);
+  if (model === undefined) {
+    return;
+  }
+
+  for (let index = 1; index < block.lines.length - 1; index++) {
+    // skip start and end line
+    const beforeName = getFieldName(block.lines[index]);
+    if (beforeName === undefined) {
+      continue;
+    }
+
+    const afterName = modifier(model, beforeName);
+    if (afterName === undefined) {
+      return;
+    }
+
+    [block.lines[index]] = replaceFieldMap(block.lines[index], afterName);
+  }
+};
+
 const getBlockName = (line: string): string | undefined => {
   const matched = line.match(BLOCK_NAME_LINE_REGEX);
   if (matched === null) {
@@ -113,4 +140,14 @@ const replaceFieldName = (line: string, name: string): [string, boolean] => {
     return [line, false];
   }
   return [`${matched.groups!.before}${name}${matched.groups!.after}`, true];
+};
+
+const replaceFieldMap = (line: string, map: string): [string, boolean] => {
+  const matched = line.match(FIELD_MAP_LINE_REGEX);
+  if (matched === null) {
+    // if not found, add new map
+    return [line + ` @map("${map}")`, true];
+  }
+  // existing map found, replace it
+  return [`${matched.groups!.before}${map}${matched.groups!.after}`, true];
 };

@@ -17,5 +17,10 @@ export default {
         case: "camel",
       },
     ],
+    "field-map": [
+      {
+        case: "snake",
+      },
+    ],
   },
 };

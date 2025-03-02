@@ -1,5 +1,6 @@
 import { Config } from "./config";
 import { joinBlocks, parseBlocks } from "./parser";
+import { FieldMapRule } from "./rules/field-map-rule";
 import { FieldNameRule } from "./rules/field-name-rule";
 import { ModelMapRule } from "./rules/model-map-rule";
 import { ModelNameRule } from "./rules/model-name-rule";
@@ -19,6 +20,10 @@ export const fix = async (content: string, config: Config): Promise<string> => {
   if (config.rules["field-name"] !== undefined) {
     const configs = config.rules["field-name"];
     blocks.forEach((block) => FieldNameRule.apply(configs, block));
+  }
+  if (config.rules["field-map"] !== undefined) {
+    const configs = config.rules["field-map"];
+    blocks.forEach((block) => FieldMapRule.apply(configs, block));
   }
 
   const fixedContent = joinBlocks(blocks);

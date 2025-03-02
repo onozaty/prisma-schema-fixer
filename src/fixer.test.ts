@@ -44,6 +44,44 @@ describe("fix", () => {
     // Assert
     expect(result).toMatchSnapshot();
   });
+  test("field-name", async () => {
+    // Arrange
+    const content = readFixture("simple.prisma");
+    const config = defineConfig({
+      rules: {
+        "field-name": [
+          {
+            case: "pascal",
+          },
+        ],
+      },
+    });
+
+    // Act
+    const result = await fix(content, config);
+
+    // Assert
+    expect(result).toMatchSnapshot();
+  });
+  test("field-map", async () => {
+    // Arrange
+    const content = readFixture("simple.prisma");
+    const config = defineConfig({
+      rules: {
+        "field-map": [
+          {
+            case: "snake",
+          },
+        ],
+      },
+    });
+
+    // Act
+    const result = await fix(content, config);
+
+    // Assert
+    expect(result).toMatchSnapshot();
+  });
 });
 
 const readFixture = (name: string): string => {

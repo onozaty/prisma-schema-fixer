@@ -14,7 +14,7 @@ export default {
     ],
     "field-name": [
       {
-        case: "snake",
+        case: "camel",
       },
     ],
   },

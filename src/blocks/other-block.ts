@@ -1,10 +1,15 @@
-import { Block, BlockType } from "./block";
+import { Block } from "./block";
 
 export class OtherBlock implements Block {
-  readonly type: BlockType = "other";
   private lines: string[] = [];
 
-  constructor() {}
+  constructor(lines?: string[]) {
+    if (lines !== undefined) {
+      for (const line of lines) {
+        this.appendLine(line);
+      }
+    }
+  }
 
   appendLine(line: string): void {
     this.lines.push(line);

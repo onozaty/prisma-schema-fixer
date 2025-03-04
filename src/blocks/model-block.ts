@@ -1,10 +1,15 @@
-import { Block, BlockType } from "./block";
+import { Block } from "./block";
 
 export class ModelBlock implements Block {
-  readonly type: BlockType = "model";
   private lines: Line[] = [];
 
-  constructor() {}
+  constructor(lines?: string[]) {
+    if (lines !== undefined) {
+      for (const line of lines) {
+        this.appendLine(line);
+      }
+    }
+  }
 
   appendLine(line: string): void {
     if (this.lines.length === 0) {
@@ -21,6 +26,11 @@ export class ModelBlock implements Block {
     const startLine = this.lines[0] as StartLine;
     return startLine.modelName;
   }
+  setModelName(name: string): void {
+    const startLine = this.lines[0] as StartLine;
+    startLine.modelName = name;
+  }
+
   getMap(): string | undefined {
     const mapLine = this.lines.find(
       (line): line is MapLine => line instanceof MapLine,
@@ -108,9 +118,14 @@ class FieldLine implements Line {
   getFieldName(): string {
     return (this.lineItems[1] as FieldNameItem).fileName;
   }
+
   getFieldType(): string {
     return (this.lineItems[3] as FieldTypeItem).fileType;
   }
+  setFieldType(type: string): void {
+    (this.lineItems[3] as FieldTypeItem).fileType = type;
+  }
+
   getMap(): string | undefined {
     const mapItem = this.lineItems.find(
       (item): item is MapItem => item instanceof MapItem,

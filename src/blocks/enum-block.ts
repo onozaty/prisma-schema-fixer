@@ -1,10 +1,15 @@
-import { Block, BlockType } from "./block";
+import { Block } from "./block";
 
 export class EnumBlock implements Block {
-  readonly type: BlockType = "enum";
   private lines: Line[] = [];
 
-  constructor() {}
+  constructor(lines?: string[]) {
+    if (lines !== undefined) {
+      for (const line of lines) {
+        this.appendLine(line);
+      }
+    }
+  }
 
   appendLine(line: string): void {
     if (this.lines.length === 0) {

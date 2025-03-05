@@ -3,7 +3,7 @@ import { EnumBlock } from "../blocks/enum-block";
 import { ModelBlock } from "../blocks/model-block";
 import { NoneBlock } from "../blocks/none-block";
 import { OtherBlock } from "../blocks/other-block";
-import { changeModelName } from "./block-transform";
+import { changeFieldName, changeModelName } from "./block-transform";
 
 describe("changeModelName", () => {
   test("model name", () => {
@@ -13,14 +13,11 @@ describe("changeModelName", () => {
         "model User {",
         "  id        Int      @id @default(autoincrement())",
         "  name      String?",
-        "  createdAt DateTime @default(now())",
         "}",
       ]),
       new ModelBlock([
         "model UserProfile {",
         "  id        Int      @id @default(autoincrement())",
-        "  name      String?",
-        "  createdAt DateTime @default(now())",
         "}",
       ]),
       new EnumBlock(["enum User {", "  USER", "  ADMIN", "}"]),
@@ -38,14 +35,11 @@ describe("changeModelName", () => {
       "model UserTo {",
       "  id        Int      @id @default(autoincrement())",
       "  name      String?",
-      "  createdAt DateTime @default(now())",
       "}",
     ]);
     expect(blocks[1].getLines()).toEqual([
       "model UserProfile {",
       "  id        Int      @id @default(autoincrement())",
-      "  name      String?",
-      "  createdAt DateTime @default(now())",
       "}",
     ]);
     expect(blocks[2].getLines()).toEqual([
@@ -141,6 +135,172 @@ describe("changeModelName", () => {
       "  id    Int    @id @default(autoincrement())",
       "  name  String @unique",
       "  users UserTo[]",
+      "}",
+    ]);
+  });
+});
+
+describe("changeFieldName", () => {
+  test("field", () => {
+    // Arrange
+    const blocks: Block[] = [
+      new ModelBlock([
+        "model Xx {",
+        "  id  Int      @id @default(autoincrement())",
+        "  a   DateTime @default(now())",
+        "}",
+      ]),
+      new ModelBlock([
+        "model X {",
+        "  id  Int      @id @default(autoincrement())",
+        "  a   DateTime @default(now())",
+        "  aa  DateTime @default(now())",
+        "  aaa DateTime @default(now())",
+        "}",
+      ]),
+      new EnumBlock(["enum X {", "  a", "}"]),
+      new OtherBlock(["other X {", "  a", "}"]),
+      new NoneBlock(["// X a"]),
+    ];
+    const modelName = "X";
+    const from = "a";
+    const to = "aTo";
+
+    // Act
+    changeFieldName(blocks, modelName, from, to);
+
+    // Assert
+    expect(blocks[0].getLines()).toEqual([
+      "model Xx {",
+      "  id  Int      @id @default(autoincrement())",
+      "  a   DateTime @default(now())",
+      "}",
+    ]);
+    expect(blocks[1].getLines()).toEqual([
+      "model X {",
+      "  id  Int      @id @default(autoincrement())",
+      "  aTo   DateTime @default(now())",
+      "  aa  DateTime @default(now())",
+      "  aaa DateTime @default(now())",
+      "}",
+    ]);
+    expect(blocks[2].getLines()).toEqual(["enum X {", "  a", "}"]);
+    expect(blocks[3].getLines()).toEqual(["other X {", "  a", "}"]);
+    expect(blocks[4].getLines()).toEqual(["// X a"]);
+  });
+
+  test("relation fields", () => {
+    // Arrange
+    const blocks: Block[] = [
+      new ModelBlock([
+        "model Xx {",
+        "  id1 Int @id @default(autoincrement())",
+        "  id2 Int?",
+        "  x   X?",
+        "}",
+      ]),
+      new ModelBlock([
+        "model X {",
+        "  id1  Int  @id @default(autoincrement())",
+        "  id2  Int?",
+        "  xx   Xx?  @relation(fields: [id1, id2], references: [id1, id2])",
+        "  xxx  Xxx? @relation(fields: [id2], references: [id2])",
+        "}",
+      ]),
+      new ModelBlock([
+        "model Xxx {",
+        "  id1 Int @id @default(autoincrement())",
+        "  id2 Int",
+        "  x   X[]",
+        "}",
+      ]),
+    ];
+    const modelName = "X";
+    const from = "id2";
+    const to = "id2To";
+
+    // Act
+    changeFieldName(blocks, modelName, from, to);
+
+    // Assert
+    expect(blocks[0].getLines()).toEqual([
+      "model Xx {",
+      "  id1 Int @id @default(autoincrement())",
+      "  id2 Int?",
+      "  x   X?",
+      "}",
+    ]);
+    expect(blocks[1].getLines()).toEqual([
+      "model X {",
+      "  id1  Int  @id @default(autoincrement())",
+      "  id2To  Int?",
+      "  xx   Xx?  @relation(fields: [id1, id2To], references: [id1, id2])",
+      "  xxx  Xxx? @relation(fields: [id2To], references: [id2])",
+      "}",
+    ]);
+    expect(blocks[2].getLines()).toEqual([
+      "model Xxx {",
+      "  id1 Int @id @default(autoincrement())",
+      "  id2 Int",
+      "  x   X[]",
+      "}",
+    ]);
+  });
+
+  test("relation references", () => {
+    // Arrange
+    const blocks: Block[] = [
+      new ModelBlock([
+        "model Xx {",
+        "  id1 Int @id @default(autoincrement())",
+        "  id2 Int?",
+        "  x   X?",
+        "}",
+      ]),
+      new ModelBlock([
+        "model X {",
+        "  id1  Int  @id @default(autoincrement())",
+        "  id2  Int?",
+        "  xx   Xx?  @relation(fields: [id1, id2], references: [id1, id2])",
+        "  xxx  Xxx? @relation(fields: [id2], references: [id2])",
+        "}",
+      ]),
+      new ModelBlock([
+        "model Xxx {",
+        "  id1 Int @id @default(autoincrement())",
+        "  id2 Int",
+        "  x   X[]",
+        "}",
+      ]),
+    ];
+    const modelName = "Xx";
+    const from = "id2";
+    const to = "id2To";
+
+    // Act
+    changeFieldName(blocks, modelName, from, to);
+
+    // Assert
+    expect(blocks[0].getLines()).toEqual([
+      "model Xx {",
+      "  id1 Int @id @default(autoincrement())",
+      "  id2To Int?",
+      "  x   X?",
+      "}",
+    ]);
+    expect(blocks[1].getLines()).toEqual([
+      "model X {",
+      "  id1  Int  @id @default(autoincrement())",
+      "  id2  Int?",
+      "  xx   Xx?  @relation(fields: [id1, id2], references: [id1, id2To])",
+      "  xxx  Xxx? @relation(fields: [id2], references: [id2])",
+      "}",
+    ]);
+    expect(blocks[2].getLines()).toEqual([
+      "model Xxx {",
+      "  id1 Int @id @default(autoincrement())",
+      "  id2 Int",
+      "  x   X[]",
       "}",
     ]);
   });

@@ -57,7 +57,7 @@ class StartLine implements Line {
   constructor(line: string) {
     const matched = line.match(StartLine.LINE_REGEX);
     if (matched === null) {
-      throw new Error("Invalid model name line");
+      throw new Error("Invalid enum name line");
     }
     this.before = matched.groups!.before;
     this.enumName = matched.groups!.name;

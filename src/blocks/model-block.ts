@@ -42,6 +42,12 @@ export class ModelBlock implements Block {
       .filter((line): line is FieldLine => line instanceof FieldLine)
       .map((line) => line);
   }
+
+  static filter(blocks: Block[]): ModelBlock[] {
+    return blocks.filter(
+      (block): block is ModelBlock => block instanceof ModelBlock,
+    );
+  }
 }
 
 const parseLine = (line: string): Line => {
@@ -118,6 +124,9 @@ class FieldLine implements Line {
   getFieldName(): string {
     return (this.lineItems[1] as FieldNameItem).fileName;
   }
+  setFieldName(name: string): void {
+    (this.lineItems[1] as FieldNameItem).fileName = name;
+  }
 
   getFieldType(): string {
     return (this.lineItems[3] as FieldTypeItem).fileType;
@@ -132,17 +141,37 @@ class FieldLine implements Line {
     );
     return mapItem?.map;
   }
+
   getRelationFields(): string[] | undefined {
     const relationItem = this.lineItems.find(
       (item): item is RelationItem => item instanceof RelationItem,
     );
     return relationItem?.fields;
   }
+  setRelationFields(fields: string[]): void {
+    const relationItem = this.lineItems.find(
+      (item): item is RelationItem => item instanceof RelationItem,
+    );
+    if (relationItem === undefined) {
+      throw new Error("Relation item not found");
+    }
+    relationItem.fields = fields;
+  }
+
   getRelationReferences(): string[] | undefined {
     const relationItem = this.lineItems.find(
       (item): item is RelationItem => item instanceof RelationItem,
     );
     return relationItem?.references;
+  }
+  setRelationReferences(references: string[]): void {
+    const relationItem = this.lineItems.find(
+      (item): item is RelationItem => item instanceof RelationItem,
+    );
+    if (relationItem === undefined) {
+      throw new Error("Relation item not found");
+    }
+    relationItem.references = references;
   }
 }
 

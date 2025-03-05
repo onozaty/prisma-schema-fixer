@@ -17,25 +17,23 @@ export namespace ModelNameRule {
   };
 
   export const apply = (configs: Config[], blocks: Block[]): void => {
-    for (const block of blocks) {
-      if (block instanceof ModelBlock) {
-        const modelName = block.getModelName();
-        const config = selectConfigByName(configs, modelName);
-        if (config === undefined) {
-          continue;
-        }
+    for (const modelBlock of ModelBlock.filter(blocks)) {
+      const modelName = modelBlock.getModelName();
+      const config = selectConfigByName(configs, modelName);
+      if (config === undefined) {
+        continue;
+      }
 
-        let changedModelName = modelName;
-        if (config.case !== undefined) {
-          changedModelName = changeCase(changedModelName, config.case);
-        }
-        if (config.form !== undefined) {
-          changedModelName = changeForm(changedModelName, config.form);
-        }
+      let changedModelName = modelName;
+      if (config.case !== undefined) {
+        changedModelName = changeCase(changedModelName, config.case);
+      }
+      if (config.form !== undefined) {
+        changedModelName = changeForm(changedModelName, config.form);
+      }
 
-        if (modelName !== changedModelName) {
-          changeModelName(blocks, modelName, changedModelName);
-        }
+      if (modelName !== changedModelName) {
+        changeModelName(blocks, modelName, changedModelName);
       }
     }
   };

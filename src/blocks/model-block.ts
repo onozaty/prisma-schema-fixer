@@ -37,6 +37,22 @@ export class ModelBlock implements Block {
     );
     return mapLine?.map;
   }
+  setMap(map: string | undefined): void {
+    const mapLine = this.lines.find(
+      (line): line is MapLine => line instanceof MapLine,
+    );
+
+    if (mapLine === undefined) {
+      if (map === undefined) {
+        return;
+      }
+      // insert map line before the last line
+      this.lines.splice(this.lines.length - 1, 0, new MapLine(map));
+    } else {
+      mapLine.map = map;
+    }
+  }
+
   getFieldLines(): FieldLine[] {
     return this.lines
       .filter((line): line is FieldLine => line instanceof FieldLine)
@@ -185,13 +201,19 @@ class MapLine implements Line {
   map: string | undefined;
   private readonly after: string;
 
-  constructor(match: RegExpMatchArray) {
-    this.before = match.groups!.before;
-    this.map = match.groups!.map.substring(
-      MapLine.MAP_PREFIX.length,
-      match.groups!.map.length - MapLine.MAP_SUFFIX.length,
-    );
-    this.after = match.groups!.after;
+  constructor(source: RegExpMatchArray | string) {
+    if (typeof source === "string") {
+      this.before = "  ";
+      this.map = source;
+      this.after = "";
+    } else {
+      this.before = source.groups!.before;
+      this.map = source.groups!.map.substring(
+        MapLine.MAP_PREFIX.length,
+        source.groups!.map.length - MapLine.MAP_SUFFIX.length,
+      );
+      this.after = source.groups!.after;
+    }
   }
   toString(): string {
     return (

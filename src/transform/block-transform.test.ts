@@ -3,7 +3,11 @@ import { EnumBlock } from "../blocks/enum-block";
 import { ModelBlock } from "../blocks/model-block";
 import { NoneBlock } from "../blocks/none-block";
 import { OtherBlock } from "../blocks/other-block";
-import { changeFieldName, changeModelName } from "./block-transform";
+import {
+  changeEnumName,
+  changeFieldName,
+  changeModelName,
+} from "./block-transform";
 
 describe("changeModelName", () => {
   test("model name", () => {
@@ -301,6 +305,106 @@ describe("changeFieldName", () => {
       "  id1 Int @id @default(autoincrement())",
       "  id2 Int",
       "  x   X[]",
+      "}",
+    ]);
+  });
+});
+
+describe("changeEnumName", () => {
+  test("enum name", () => {
+    // Arrange
+    const blocks: Block[] = [
+      new ModelBlock([
+        "model User {",
+        "  id        Int          @id @default(autoincrement())",
+        "  createdAt DateTime     @default(now())",
+        '  email     String       @unique @map("email_address")',
+        "  role      Role         @default(USER)",
+        "  profile   UserProfile?",
+        "}",
+      ]),
+      new ModelBlock([
+        "model UserProfile {",
+        "  id          Int      @id @default(autoincrement())",
+        "  createdAt   DateTime @default(now())",
+        "  Bio         String?",
+        "  user        User     @relation(fields: [userId], references: [id])",
+        "  userId      Int      @unique",
+        "}",
+      ]),
+      new EnumBlock(["enum Role {", "  USER", "  ADMIN", "}"]),
+      new OtherBlock(["other xxxx  { abc efg", "}"]),
+      new NoneBlock(["// Comment"]),
+    ];
+
+    const from = "Role";
+    const to = "RoleTo";
+
+    // Act
+    changeEnumName(blocks, from, to);
+
+    // Assert
+    expect(blocks[0].getLines()).toEqual([
+      "model User {",
+      "  id        Int          @id @default(autoincrement())",
+      "  createdAt DateTime     @default(now())",
+      '  email     String       @unique @map("email_address")',
+      "  role      RoleTo         @default(USER)",
+      "  profile   UserProfile?",
+      "}",
+    ]);
+    expect(blocks[1].getLines()).toEqual([
+      "model UserProfile {",
+      "  id          Int      @id @default(autoincrement())",
+      "  createdAt   DateTime @default(now())",
+      "  Bio         String?",
+      "  user        User     @relation(fields: [userId], references: [id])",
+      "  userId      Int      @unique",
+      "}",
+    ]);
+    expect(blocks[2].getLines()).toEqual([
+      "enum RoleTo {",
+      "  USER",
+      "  ADMIN",
+      "}",
+    ]);
+    expect(blocks[3].getLines()).toEqual(["other xxxx  { abc efg", "}"]);
+    expect(blocks[4].getLines()).toEqual(["// Comment"]);
+  });
+
+  test("field type", () => {
+    // Arrange
+    const blocks: Block[] = [
+      new ModelBlock([
+        "model X {",
+        "  id     Int  @id @default(autoincrement())",
+        "  role   Role?",
+        "  roles  Role[]",
+        "  roles2 Role[]?",
+        "}",
+      ]),
+      new EnumBlock(["enum Role {", "  USER", "  ADMIN", "}"]),
+    ];
+
+    const from = "Role";
+    const to = "RoleTo";
+
+    // Act
+    changeEnumName(blocks, from, to);
+
+    // Assert
+    expect(blocks[0].getLines()).toEqual([
+      "model X {",
+      "  id     Int  @id @default(autoincrement())",
+      "  role   RoleTo?",
+      "  roles  RoleTo[]",
+      "  roles2 RoleTo[]?",
+      "}",
+    ]);
+    expect(blocks[1].getLines()).toEqual([
+      "enum RoleTo {",
+      "  USER",
+      "  ADMIN",
       "}",
     ]);
   });

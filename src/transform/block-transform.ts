@@ -1,4 +1,5 @@
 import { Block } from "../blocks/block";
+import { EnumBlock } from "../blocks/enum-block";
 import { ModelBlock } from "../blocks/model-block";
 
 export const changeModelName = (
@@ -64,6 +65,31 @@ export const changeFieldName = (
             );
           }
         }
+      }
+    }
+  }
+};
+
+export const changeEnumName = (
+  blocks: Block[],
+  from: string,
+  to: string,
+): void => {
+  for (const enumBlock of EnumBlock.filter(blocks)) {
+    // change enum name
+    if (enumBlock.getEnumName() === from) {
+      enumBlock.setEnumName(to);
+    }
+  }
+
+  for (const modelBlock of ModelBlock.filter(blocks)) {
+    // change field type
+    const fields = modelBlock.getFieldLines();
+    for (const field of fields) {
+      const beforeFileType = field.getFieldType();
+      if (field.getTrimedFieldType() === from) {
+        // keep array and nullable
+        field.setFieldType(beforeFileType.replace(from, to));
       }
     }
   }

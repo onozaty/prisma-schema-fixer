@@ -70,6 +70,11 @@ describe("apply", () => {
         '  @@map("XXXX")',
         "}",
       ]),
+      new ModelBlock([
+        "model A {",
+        "  id     Int    @id @default(autoincrement())",
+        "}",
+      ]),
     ];
 
     // Act
@@ -87,6 +92,11 @@ describe("apply", () => {
       "  id     Int    @id @default(autoincrement())",
       "  name   String?",
       "  ",
+      "}",
+    ]);
+    expect(blocks[2].getLines()).toEqual([
+      "model A {",
+      "  id     Int    @id @default(autoincrement())",
       "}",
     ]);
   });

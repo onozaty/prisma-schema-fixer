@@ -3,16 +3,15 @@ import { EnumBlock } from "../blocks/enum-block";
 import { ModelBlock } from "../blocks/model-block";
 import { NoneBlock } from "../blocks/none-block";
 import { OtherBlock } from "../blocks/other-block";
-import { EnumMapRule } from "./enum-map-rule";
+import { EnumNameRule } from "./enuml-name-rule";
 
 describe("apply", () => {
   test("case", () => {
     // Arrange
-    const configs: EnumMapRule.Config[] = [{ case: "snake" }];
+    const configs: EnumNameRule.Config[] = [{ case: "snake" }];
     const blocks: Block[] = [
       new EnumBlock(["enum User {", "  X", "  Y", "}"]),
       new EnumBlock(["enum UserType {", "  USER", "  ADMIN", "}"]),
-      new EnumBlock(["enum x {", "  X", "  Y", '  @@map("XXXX")', "}"]),
       new ModelBlock([
         "model User {",
         "  id    Int    @id @default(autoincrement())",
@@ -23,66 +22,49 @@ describe("apply", () => {
     ];
 
     // Act
-    EnumMapRule.apply(configs, blocks);
+    EnumNameRule.apply(configs, blocks);
 
     // Assert
-    expect(blocks[0].getLines()).toEqual([
-      "enum User {",
-      "  X",
-      "  Y",
-      '  @@map("user")',
-      "}",
-    ]);
+    expect(blocks[0].getLines()).toEqual(["enum user {", "  X", "  Y", "}"]);
     expect(blocks[1].getLines()).toEqual([
-      "enum UserType {",
+      "enum user_type {",
       "  USER",
       "  ADMIN",
-      '  @@map("user_type")',
       "}",
     ]);
-    expect(blocks[2].getLines()).toEqual(["enum x {", "  X", "  Y", "  ", "}"]);
-    expect(blocks[3].getLines()).toEqual([
+    expect(blocks[2].getLines()).toEqual([
       "model User {",
       "  id    Int    @id @default(autoincrement())",
       "}",
     ]);
-    expect(blocks[4].getLines()).toEqual(["other User  {", "}"]);
-    expect(blocks[5].getLines()).toEqual(["// User"]);
+    expect(blocks[3].getLines()).toEqual(["other User  {", "}"]);
+    expect(blocks[4].getLines()).toEqual(["// User"]);
   });
 
   test("form", () => {
     // Arrange
-    const configs: EnumMapRule.Config[] = [{ form: "plural" }];
+    const configs: EnumNameRule.Config[] = [{ form: "plural" }];
     const blocks: Block[] = [
       new EnumBlock(["enum User {", "  X", "  Y", "}"]),
       new EnumBlock(["enum UserType {", "  USER", "  ADMIN", "}"]),
-      new EnumBlock(["enum xs {", "  X", "  Y", "}"]),
     ];
 
     // Act
-    EnumMapRule.apply(configs, blocks);
+    EnumNameRule.apply(configs, blocks);
 
     // Assert
-    expect(blocks[0].getLines()).toEqual([
-      "enum User {",
-      "  X",
-      "  Y",
-      '  @@map("Users")',
-      "}",
-    ]);
+    expect(blocks[0].getLines()).toEqual(["enum Users {", "  X", "  Y", "}"]);
     expect(blocks[1].getLines()).toEqual([
-      "enum UserType {",
+      "enum UserTypes {",
       "  USER",
       "  ADMIN",
-      '  @@map("UserTypes")',
       "}",
     ]);
-    expect(blocks[2].getLines()).toEqual(["enum xs {", "  X", "  Y", "}"]);
   });
 
   test("case & form", () => {
     // Arrange
-    const configs: EnumMapRule.Config[] = [{ case: "snake", form: "plural" }];
+    const configs: EnumNameRule.Config[] = [{ case: "snake", form: "plural" }];
     const blocks: Block[] = [
       new EnumBlock(["enum User {", "  X", "  Y", "}"]),
       new EnumBlock([
@@ -95,28 +77,22 @@ describe("apply", () => {
     ];
 
     // Act
-    EnumMapRule.apply(configs, blocks);
+    EnumNameRule.apply(configs, blocks);
 
     // Assert
-    expect(blocks[0].getLines()).toEqual([
-      "enum User {",
-      "  X",
-      "  Y",
-      '  @@map("users")',
-      "}",
-    ]);
+    expect(blocks[0].getLines()).toEqual(["enum users {", "  X", "  Y", "}"]);
     expect(blocks[1].getLines()).toEqual([
-      "enum UserType {",
+      "enum user_types {",
       "  USER",
       "  ADMIN",
-      '  @@map("user_types") // comment',
+      '  @@map("xxxx") // comment',
       "}",
     ]);
   });
 
   test("configs", () => {
     // Arrange
-    const configs: EnumMapRule.Config[] = [
+    const configs: EnumNameRule.Config[] = [
       { case: "camel" },
       { targets: ["YyyYyy"], case: "snake", form: "plural" },
       { targets: /X/, case: "pascal" },
@@ -128,41 +104,28 @@ describe("apply", () => {
     ];
 
     // Act
-    EnumMapRule.apply(configs, blocks);
+    EnumNameRule.apply(configs, blocks);
 
     // Assert
-    expect(blocks[0].getLines()).toEqual([
-      "enum XXX {",
-      "  X",
-      "  Y",
-      '  @@map("Xxx")',
-      "}",
-    ]);
+    expect(blocks[0].getLines()).toEqual(["enum Xxx {", "  X", "  Y", "}"]);
     expect(blocks[1].getLines()).toEqual([
-      "enum YyyYyy {",
+      "enum yyy_yyys {",
       "  X",
       "  Y",
-      '  @@map("yyy_yyys")',
       "}",
     ]);
-    expect(blocks[2].getLines()).toEqual([
-      "enum Zzz {",
-      "  X",
-      "  Y",
-      '  @@map("zzz")',
-      "}",
-    ]);
+    expect(blocks[2].getLines()).toEqual(["enum zzz {", "  X", "  Y", "}"]);
   });
 
   test("configs - miss", () => {
     // Arrange
-    const configs: EnumMapRule.Config[] = [
+    const configs: EnumNameRule.Config[] = [
       { targets: ["XX"], case: "snake", form: "plural" },
     ];
     const blocks: Block[] = [new EnumBlock(["enum XXX {", "  X", "  Y", "}"])];
 
     // Act
-    EnumMapRule.apply(configs, blocks);
+    EnumNameRule.apply(configs, blocks);
 
     // Assert
     expect(blocks[0].getLines()).toEqual(["enum XXX {", "  X", "  Y", "}"]);

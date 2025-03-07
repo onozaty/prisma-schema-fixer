@@ -26,6 +26,10 @@ export class EnumBlock implements Block {
     const startLine = this.lines[0] as StartLine;
     return startLine.enumName;
   }
+  setEnumName(name: string): void {
+    const startLine = this.lines[0] as StartLine;
+    startLine.enumName = name;
+  }
 
   getMap(): string | undefined {
     const mapLine = this.lines.find(

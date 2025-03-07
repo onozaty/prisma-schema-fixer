@@ -38,7 +38,7 @@ export class ModelBlock implements Block {
     return mapLine?.map;
   }
   setMap(map: string | undefined): void {
-    const mapLine = this.lines.find(
+    let mapLine = this.lines.find(
       (line): line is MapLine => line instanceof MapLine,
     );
 
@@ -46,11 +46,11 @@ export class ModelBlock implements Block {
       if (map === undefined) {
         return;
       }
+      mapLine = new MapLine();
       // insert map line before the last line
-      this.lines.splice(this.lines.length - 1, 0, new MapLine(map));
-    } else {
-      mapLine.map = map;
+      this.lines.splice(this.lines.length - 1, 0, mapLine);
     }
+    mapLine.map = map;
   }
 
   getFieldLines(): FieldLine[] {
@@ -65,6 +65,19 @@ export class ModelBlock implements Block {
     );
   }
 }
+
+export const PRIMITIVE_TYPES: string[] = [
+  "String",
+  "Boolean",
+  "Int",
+  "BigInt",
+  "Float",
+  "Decimal",
+  "DateTime",
+  "Json",
+  "Bytes",
+  "Unsupported",
+] as const;
 
 const parseLine = (line: string): Line => {
   let match: RegExpMatchArray | null;
@@ -147,6 +160,9 @@ class FieldLine implements Line {
   getFieldType(): string {
     return (this.lineItems[3] as FieldTypeItem).fileType;
   }
+  getTrimedFieldType(): string {
+    return this.getFieldType().replace("[]", "").replace("?", "");
+  }
   setFieldType(type: string): void {
     (this.lineItems[3] as FieldTypeItem).fileType = type;
   }
@@ -156,6 +172,27 @@ class FieldLine implements Line {
       (item): item is MapItem => item instanceof MapItem,
     );
     return mapItem?.map;
+  }
+  setMap(map: string | undefined): void {
+    let mapItem = this.lineItems.find(
+      (item): item is MapItem => item instanceof MapItem,
+    );
+    if (mapItem === undefined) {
+      if (map === undefined) {
+        return;
+      }
+      mapItem = new MapItem();
+
+      // insert map item after the field type
+      this.lineItems.splice(
+        4,
+        0,
+        new OtherItem(" "),
+        mapItem,
+        new OtherItem(" "),
+      );
+    }
+    mapItem.map = map;
   }
 
   getRelationFields(): string[] | undefined {
@@ -201,18 +238,18 @@ class MapLine implements Line {
   map: string | undefined;
   private readonly after: string;
 
-  constructor(source: RegExpMatchArray | string) {
-    if (typeof source === "string") {
+  constructor(match?: RegExpMatchArray | undefined) {
+    if (match === undefined) {
       this.before = "  ";
-      this.map = source;
+      this.map = undefined;
       this.after = "";
     } else {
-      this.before = source.groups!.before;
-      this.map = source.groups!.map.substring(
+      this.before = match.groups!.before;
+      this.map = match.groups!.map.substring(
         MapLine.MAP_PREFIX.length,
-        source.groups!.map.length - MapLine.MAP_SUFFIX.length,
+        match.groups!.map.length - MapLine.MAP_SUFFIX.length,
       );
-      this.after = source.groups!.after;
+      this.after = match.groups!.after;
     }
   }
   toString(): string {
@@ -266,11 +303,15 @@ class MapItem implements FieldLineItem {
 
   map: string | undefined;
 
-  constructor(item: string) {
-    this.map = item.substring(
-      MapItem.MAP_PREFIX.length,
-      item.length - MapItem.MAP_SUFFIX.length,
-    );
+  constructor(item?: string | undefined) {
+    if (item === undefined) {
+      this.map = undefined;
+    } else {
+      this.map = item.substring(
+        MapItem.MAP_PREFIX.length,
+        item.length - MapItem.MAP_SUFFIX.length,
+      );
+    }
   }
   toString(): string {
     return this.map !== undefined

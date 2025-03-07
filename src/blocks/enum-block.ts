@@ -32,6 +32,12 @@ export class EnumBlock implements Block {
     );
     return mapLine?.map;
   }
+
+  static filter(blocks: Block[]): EnumBlock[] {
+    return blocks.filter(
+      (block): block is EnumBlock => block instanceof EnumBlock,
+    );
+  }
 }
 
 const parseLine = (line: string): Line => {

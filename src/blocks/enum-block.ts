@@ -26,11 +26,27 @@ export class EnumBlock implements Block {
     const startLine = this.lines[0] as StartLine;
     return startLine.enumName;
   }
+
   getMap(): string | undefined {
     const mapLine = this.lines.find(
       (line): line is MapLine => line instanceof MapLine,
     );
     return mapLine?.map;
+  }
+  setMap(map: string | undefined): void {
+    let mapLine = this.lines.find(
+      (line): line is MapLine => line instanceof MapLine,
+    );
+
+    if (mapLine === undefined) {
+      if (map === undefined) {
+        return;
+      }
+      mapLine = new MapLine();
+      // insert map line before the last line
+      this.lines.splice(this.lines.length - 1, 0, mapLine);
+    }
+    mapLine.map = map;
   }
 
   static filter(blocks: Block[]): EnumBlock[] {
@@ -85,13 +101,19 @@ class MapLine implements Line {
   map: string | undefined;
   private readonly after: string;
 
-  constructor(match: RegExpMatchArray) {
-    this.before = match.groups!.before;
-    this.map = match.groups!.map.substring(
-      MapLine.MAP_PREFIX.length,
-      match.groups!.map.length - MapLine.MAP_SUFFIX.length,
-    );
-    this.after = match.groups!.after;
+  constructor(match?: RegExpMatchArray | undefined) {
+    if (match === undefined) {
+      this.before = "  ";
+      this.map = undefined;
+      this.after = "";
+    } else {
+      this.before = match.groups!.before;
+      this.map = match.groups!.map.substring(
+        MapLine.MAP_PREFIX.length,
+        match.groups!.map.length - MapLine.MAP_SUFFIX.length,
+      );
+      this.after = match.groups!.after;
+    }
   }
   toString(): string {
     return (

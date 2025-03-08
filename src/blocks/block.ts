@@ -6,4 +6,5 @@ export type BlockType = (typeof BlockType)[number];
 export interface Block {
   appendLine(line: string): void;
   getLines(): string[];
+  isEmpty(): boolean;
 }

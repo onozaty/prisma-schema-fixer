@@ -17,4 +17,7 @@ export class NoneBlock implements Block {
   getLines(): string[] {
     return this.lines;
   }
+  isEmpty(): boolean {
+    return this.lines.length === 0;
+  }
 }

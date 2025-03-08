@@ -1,0 +1,273 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`fix > enum-map 1`] = `
+"datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Users {
+  id        Int          @id @default(autoincrement())
+  createdAt DateTime     @default(now())
+  email     String       @unique
+  role      Role         @default(USER)
+  posts     Post[]
+  profile   UserProfile?
+}
+
+model userProfile {
+  id     Int     @id @default(autoincrement())
+  name   String?
+  bio    String?
+  user   User    @relation(fields: [userId], references: [id])
+  userId Int     @unique
+}
+
+model post {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  published Boolean  @default(false)
+  title     String   @db.VarChar(255)
+  author    User?    @relation(fields: [authorId], references: [id])
+  authorId  Int?
+}
+
+enum Role {
+  USER
+  ADMIN
+
+  @@map("role")
+}
+"
+`;
+
+exports[`fix > enum-name 1`] = `
+"datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Users {
+  id        Int          @id @default(autoincrement())
+  createdAt DateTime     @default(now())
+  email     String       @unique
+  role      Roles        @default(USER)
+  posts     Post[]
+  profile   UserProfile?
+}
+
+model userProfile {
+  id     Int     @id @default(autoincrement())
+  name   String?
+  bio    String?
+  user   User    @relation(fields: [userId], references: [id])
+  userId Int     @unique
+}
+
+model post {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  published Boolean  @default(false)
+  title     String   @db.VarChar(255)
+  author    User?    @relation(fields: [authorId], references: [id])
+  authorId  Int?
+}
+
+enum Roles {
+  USER
+  ADMIN
+}
+"
+`;
+
+exports[`fix > field-map 1`] = `
+"datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Users {
+  id        Int          @id @default(autoincrement())
+  createdAt DateTime     @default(now()) @map("created_at")
+  email     String       @unique
+  role      Role         @default(USER)
+  posts     Post[]
+  profile   UserProfile?
+}
+
+model userProfile {
+  id     Int     @id @default(autoincrement())
+  name   String?
+  bio    String?
+  user   User    @relation(fields: [userId], references: [id])
+  userId Int     @unique @map("user_id")
+}
+
+model post {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  published Boolean  @default(false)
+  title     String   @db.VarChar(255)
+  author    User?    @relation(fields: [authorId], references: [id])
+  authorId  Int?     @map("author_id")
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+"
+`;
+
+exports[`fix > field-name 1`] = `
+"datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Users {
+  Id        Int          @id @default(autoincrement())
+  CreatedAt DateTime     @default(now())
+  Email     String       @unique
+  Role      Role         @default(USER)
+  Posts     Post[]
+  Profile   UserProfile?
+}
+
+model userProfile {
+  Id     Int     @id @default(autoincrement())
+  Name   String?
+  Bio    String?
+  User   User    @relation(fields: [UserId], references: [id])
+  UserId Int     @unique
+}
+
+model post {
+  Id        Int      @id @default(autoincrement())
+  CreatedAt DateTime @default(now())
+  UpdatedAt DateTime @updatedAt
+  Published Boolean  @default(false)
+  Title     String   @db.VarChar(255)
+  Author    User?    @relation(fields: [AuthorId], references: [id])
+  AuthorId  Int?
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+"
+`;
+
+exports[`fix > model-map 1`] = `
+"datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Users {
+  id        Int          @id @default(autoincrement())
+  createdAt DateTime     @default(now())
+  email     String       @unique
+  role      Role         @default(USER)
+  posts     Post[]
+  profile   UserProfile?
+
+  @@map("users")
+}
+
+model userProfile {
+  id     Int     @id @default(autoincrement())
+  name   String?
+  bio    String?
+  user   User    @relation(fields: [userId], references: [id])
+  userId Int     @unique
+
+  @@map("user_profiles")
+}
+
+model post {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  published Boolean  @default(false)
+  title     String   @db.VarChar(255)
+  author    User?    @relation(fields: [authorId], references: [id])
+  authorId  Int?
+
+  @@map("posts")
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+"
+`;
+
+exports[`fix > model-name 1`] = `
+"datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id        Int          @id @default(autoincrement())
+  createdAt DateTime     @default(now())
+  email     String       @unique
+  role      Role         @default(USER)
+  posts     Post[]
+  profile   UserProfile?
+}
+
+model UserProfile {
+  id     Int     @id @default(autoincrement())
+  name   String?
+  bio    String?
+  user   User    @relation(fields: [userId], references: [id])
+  userId Int     @unique
+}
+
+model Post {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  published Boolean  @default(false)
+  title     String   @db.VarChar(255)
+  author    User?    @relation(fields: [authorId], references: [id])
+  authorId  Int?
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+"
+`;

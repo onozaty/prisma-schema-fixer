@@ -21,6 +21,9 @@ export class EnumBlock implements Block {
   getLines(): string[] {
     return this.lines.map((line) => line.toString());
   }
+  isEmpty(): boolean {
+    return this.lines.length === 0;
+  }
 
   getEnumName(): string {
     const startLine = this.lines[0] as StartLine;

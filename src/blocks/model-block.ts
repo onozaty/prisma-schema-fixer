@@ -21,6 +21,9 @@ export class ModelBlock implements Block {
   getLines(): string[] {
     return this.lines.map((line) => line.toString());
   }
+  isEmpty(): boolean {
+    return this.lines.length === 0;
+  }
 
   getModelName(): string {
     const startLine = this.lines[0] as StartLine;

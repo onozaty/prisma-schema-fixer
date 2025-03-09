@@ -22,5 +22,17 @@ export default {
         case: "snake",
       },
     ],
+    "enum-name": [
+      {
+        case: "pascal",
+        form: "singular",
+      },
+    ],
+    "enum-map": [
+      {
+        case: "snake",
+        form: "plural",
+      },
+    ],
   },
 };

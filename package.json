@@ -3,7 +3,9 @@
   "version": "0.0.1",
   "description": "Fix schema.prisma according to the rules",
   "type": "module",
-  "bin": "dist/cli.mjs",
+  "bin": {
+    "prisma-schema-fixer": "./dist/cli.mjs"
+  },
   "types": "dist/index.d.ts",
   "files": [
     "dist/**/*",

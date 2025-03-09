@@ -1,6 +1,6 @@
 {
   "name": "@onozaty/prisma-schema-fixer",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Fix schema.prisma according to the rules",
   "type": "module",
   "bin": {
@@ -13,6 +13,7 @@
   ],
   "scripts": {
     "build": "rm -rf dist/ && tsc --emitDeclarationOnly && node build.js",
+    "prepare": "pnpm run build",
     "test": "vitest run",
     "lint": "eslint ."
   },

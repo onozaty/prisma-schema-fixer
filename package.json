@@ -1,19 +1,32 @@
 {
-  "name": "prisma-schema-fixer",
-  "version": "1.0.0",
-  "description": "",
+  "name": "@onozaty/prisma-schema-fixer",
+  "version": "0.0.1",
+  "description": "Fix schema.prisma according to the rules",
   "type": "module",
   "bin": "dist/cli.mjs",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist/**/*",
+    "!dist/**/*.test.*"
+  ],
   "scripts": {
-    "build": "rm -rf dist/ && node build.js",
+    "build": "rm -rf dist/ && tsc --emitDeclarationOnly && node build.js",
     "test": "vitest run",
     "lint": "eslint ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/onozaty/prisma-schema-fixer.git"
   },
   "keywords": [
     "prisma"
   ],
   "author": "onozaty",
   "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/onozaty/prisma-schema-fixer/issues"
+  },
+  "homepage": "https://github.com/onozaty/prisma-schema-fixer#readme",
   "dependencies": {
     "@prisma/internals": "^6.0.0",
     "change-case": "^5.4.4",

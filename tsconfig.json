@@ -14,7 +14,8 @@
     "isolatedModules": true,
     "outDir": "./dist",
     "rootDir": "src",
-    "types": ["vitest/globals"]
+    "types": ["vitest/globals"],
+    "declaration": true
   },
-  "include": ["src/**/*.ts", "src2/**/*.ts"]
+  "include": ["src/**/*.ts"]
 }

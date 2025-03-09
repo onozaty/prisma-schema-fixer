@@ -13,12 +13,18 @@ const toAbsoultePath = (path: string): string => {
 
 const loadConfigFile = async (configFilePath: string): Promise<Config> => {
   const absolutePath = toAbsoultePath(configFilePath);
+  if (!fs.existsSync(absolutePath)) {
+    throw new Error(`Configuration file not found: ${configFilePath}`);
+  }
   const module = await import(pathToFileURL(absolutePath).href);
   return module.default as Config;
 };
 
 const readPrismaSchema = (schemaFilePath: string): string => {
   const absolutePath = toAbsoultePath(schemaFilePath);
+  if (!fs.existsSync(absolutePath)) {
+    throw new Error(`Schema file not found: ${schemaFilePath}`);
+  }
   return fs.readFileSync(absolutePath, "utf-8");
 };
 
@@ -40,7 +46,7 @@ const run = async () => {
     .option(
       "-c, --config-file <configFile>",
       "Path to configuration file",
-      "./prisma/schema-fixer.config.js",
+      "./prisma/schema-fixer.config.mjs",
     )
     .option(
       "-n, --dry-run",
@@ -53,19 +59,24 @@ const run = async () => {
 
   const options = program.opts();
 
-  const config = await loadConfigFile(options.configFile);
-  const content = readPrismaSchema(options.file);
-  const fixedContent = await fix(content, config);
+  try {
+    const config = await loadConfigFile(options.configFile);
+    const content = readPrismaSchema(options.file);
+    const fixedContent = await fix(content, config);
 
-  if (options.dryRun) {
-    console.log(fixedContent);
-  } else {
-    if (content === fixedContent) {
-      console.log("No changes were necessary for the schema file.");
+    if (options.dryRun) {
+      console.log(fixedContent);
     } else {
-      writePrismaSchema(options.file, fixedContent);
-      console.log("Schema file has been fixed and saved successfully.");
+      if (content === fixedContent) {
+        console.log("No changes were necessary for the schema file.");
+      } else {
+        writePrismaSchema(options.file, fixedContent);
+        console.log("Schema file has been fixed and saved successfully.");
+      }
     }
+  } catch (error) {
+    console.error(error instanceof Error ? error.message : String(error));
+    process.exit(1);
   }
 };
 

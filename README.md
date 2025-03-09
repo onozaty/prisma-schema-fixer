@@ -13,10 +13,14 @@ npm install --save-dev @onozaty/prisma-schema-fixer
 Run the following command to fix your schema file:
 
 ```sh
-prisma-schema-fixer -f path/to/schema.prisma -c path/to/schema-fixer.config.mjs
+npx prisma-schema-fixer -f path/to/schema.prisma -c path/to/schema-fixer.config.mjs
 ```
 
 ```
+Usage: prisma-schema-fixer [options]
+
+Fix schema.prisma according to the rules
+
 Options:
   -f, --file <schemaFile>         Path to `schema.prisma` file (default: "./prisma/schema.prisma")
   -c, --config-file <configFile>  Path to configuration file (default: "./prisma/schema-fixer.config.mjs")

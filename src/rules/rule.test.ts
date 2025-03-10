@@ -14,7 +14,7 @@ describe("isTargetByName", () => {
     // Act/Assert
     expect(isTargetByName(targets, name)).toBe(true);
   });
-  test("string[] - false", () => {
+  test("string - false", () => {
     // Arrange
     const targets: NameTargets = ["User"];
     const name = "Comment";
@@ -121,7 +121,7 @@ describe("isTargetByField", () => {
     // Act/Assert
     expect(isTargetByField(targets, model, field)).toBe(true);
   });
-  test("model: undefined, field: string - true", () => {
+  test("model: undefined, field: string - false", () => {
     // Arrange
     const targets: FieldTargets = [{ field: "id" }, { field: "name" }];
     const model = "User";

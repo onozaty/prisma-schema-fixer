@@ -33,6 +33,9 @@ importers:
       '@vitest/coverage-v8':
         specifier: ^3.0.6
         version: 3.0.6(vitest@3.0.6(@types/node@22.13.4))
+      '@vitest/eslint-plugin':
+        specifier: ^1.1.36
+        version: 1.1.36(@typescript-eslint/utils@8.24.0(eslint@9.20.1)(typescript@5.7.3))(eslint@9.20.1)(typescript@5.7.3)(vitest@3.0.6(@types/node@22.13.4))
       esbuild:
         specifier: ^0.25.0
         version: 0.25.0
@@ -675,6 +678,19 @@ packages:
       vitest: 3.0.6
     peerDependenciesMeta:
       '@vitest/browser':
+        optional: true
+
+  '@vitest/eslint-plugin@1.1.36':
+    resolution: {integrity: sha512-IjBV/fcL9NJRxGw221ieaDsqKqj8qUo7rvSupDxMjTXyhsCusHC6M+jFUNqBp4PCkYFcf5bjrKxeZoCEWoPxig==}
+    peerDependencies:
+      '@typescript-eslint/utils': ^8.24.0
+      eslint: '>= 8.57.0'
+      typescript: '>= 5.0.0'
+      vitest: '*'
+    peerDependenciesMeta:
+      typescript:
+        optional: true
+      vitest:
         optional: true
 
   '@vitest/expect@3.0.6':
@@ -1885,6 +1901,14 @@ snapshots:
       vitest: 3.0.6(@types/node@22.13.4)
     transitivePeerDependencies:
       - supports-color
+
+  '@vitest/eslint-plugin@1.1.36(@typescript-eslint/utils@8.24.0(eslint@9.20.1)(typescript@5.7.3))(eslint@9.20.1)(typescript@5.7.3)(vitest@3.0.6(@types/node@22.13.4))':
+    dependencies:
+      '@typescript-eslint/utils': 8.24.0(eslint@9.20.1)(typescript@5.7.3)
+      eslint: 9.20.1
+    optionalDependencies:
+      typescript: 5.7.3
+      vitest: 3.0.6(@types/node@22.13.4)
 
   '@vitest/expect@3.0.6':
     dependencies:

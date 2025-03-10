@@ -41,6 +41,7 @@
     "@types/node": "^22.13.4",
     "@types/pluralize": "^0.0.33",
     "@vitest/coverage-v8": "^3.0.6",
+    "@vitest/eslint-plugin": "^1.1.36",
     "esbuild": "^0.25.0",
     "eslint": "^9.20.1",
     "globals": "^15.15.0",

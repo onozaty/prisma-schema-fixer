@@ -1,4 +1,5 @@
 import pluginJs from "@eslint/js";
+import vitest from "@vitest/eslint-plugin";
 import globals from "globals";
 import tseslint from "typescript-eslint";
 
@@ -12,5 +13,9 @@ export default [
     rules: {
       "@typescript-eslint/no-namespace": "off",
     },
+  },
+  {
+    files: ["**/*.test.ts"],
+    ...vitest.configs.recommended,
   },
 ];

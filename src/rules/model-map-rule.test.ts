@@ -191,6 +191,60 @@ describe("apply", () => {
     ]);
   });
 
+  test("configs - exclude", () => {
+    // Arrange
+    const configs: ModelMapRule.Config[] = [
+      { case: "snake", form: "plural" },
+      { targets: ["UserProfile"] },
+    ];
+    const blocks: Block[] = [
+      new ModelBlock([
+        "model User {",
+        "  id    Int    @id @default(autoincrement())",
+        "  email String @unique",
+        "}",
+      ]),
+      new ModelBlock([
+        "model UserProfile {",
+        "  id   Int      @id @default(autoincrement())",
+        "  name String?",
+        '  @@map("xxxx")',
+        "}",
+      ]),
+      new ModelBlock([
+        "model XXXX {",
+        "  id Int @id @default(autoincrement())",
+        '  @@map("xxxx")',
+        "}",
+      ]),
+    ];
+
+    // Act
+    ModelMapRule.apply(configs, blocks);
+
+    // Assert
+    expect(blocks[0].getLines()).toEqual([
+      "model User {",
+      "  id    Int    @id @default(autoincrement())",
+      "  email String @unique",
+      '  @@map("users")',
+      "}",
+    ]);
+    expect(blocks[1].getLines()).toEqual([
+      "model UserProfile {",
+      "  id   Int      @id @default(autoincrement())",
+      "  name String?",
+      '  @@map("xxxx")',
+      "}",
+    ]);
+    expect(blocks[2].getLines()).toEqual([
+      "model XXXX {",
+      "  id Int @id @default(autoincrement())",
+      '  @@map("xxxxes")',
+      "}",
+    ]);
+  });
+
   test("configs - miss", () => {
     // Arrange
     const configs: ModelMapRule.Config[] = [

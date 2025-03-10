@@ -154,6 +154,45 @@ describe("apply", () => {
     ]);
   });
 
+  test("configs - exclude", () => {
+    // Arrange
+    const configs: EnumMapRule.Config[] = [
+      { case: "pascal" },
+      { targets: ["YyyYyy"] },
+    ];
+    const blocks: Block[] = [
+      new EnumBlock(["enum XXX {", "  X", "  Y", '  @@map("XXXXXX")', "}"]),
+      new EnumBlock(["enum YyyYyy {", "  X", "  Y", '  @@map("XXXXXX")', "}"]),
+      new EnumBlock(["enum Zzz {", "  X", "  Y", '  @@map("XXXXXX")', "}"]),
+    ];
+
+    // Act
+    EnumMapRule.apply(configs, blocks);
+
+    // Assert
+    expect(blocks[0].getLines()).toEqual([
+      "enum XXX {",
+      "  X",
+      "  Y",
+      '  @@map("Xxx")',
+      "}",
+    ]);
+    expect(blocks[1].getLines()).toEqual([
+      "enum YyyYyy {",
+      "  X",
+      "  Y",
+      '  @@map("XXXXXX")',
+      "}",
+    ]);
+    expect(blocks[2].getLines()).toEqual([
+      "enum Zzz {",
+      "  X",
+      "  Y",
+      "  ",
+      "}",
+    ]);
+  });
+
   test("configs - miss", () => {
     // Arrange
     const configs: EnumMapRule.Config[] = [

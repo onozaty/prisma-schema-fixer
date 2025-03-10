@@ -27,7 +27,8 @@ export namespace FieldMapRule {
         ) {
           const fieldName = field.getFieldName();
           const config = selectConfigByField(configs, modelName, fieldName);
-          if (config === undefined) {
+          if (config?.case === undefined) {
+            // if no config, skip
             continue;
           }
 

@@ -117,6 +117,27 @@ describe("apply", () => {
     expect(blocks[2].getLines()).toEqual(["enum zzz {", "  X", "  Y", "}"]);
   });
 
+  test("configs - exclude", () => {
+    // Arrange
+    const configs: EnumNameRule.Config[] = [
+      { case: "pascal" },
+      { targets: ["yyy"] },
+    ];
+    const blocks: Block[] = [
+      new EnumBlock(["enum XXX {", "  X", "  Y", "}"]),
+      new EnumBlock(["enum yyy {", "  X", "  Y", "}"]),
+      new EnumBlock(["enum Zzz {", "  X", "  Y", "}"]),
+    ];
+
+    // Act
+    EnumNameRule.apply(configs, blocks);
+
+    // Assert
+    expect(blocks[0].getLines()).toEqual(["enum Xxx {", "  X", "  Y", "}"]);
+    expect(blocks[1].getLines()).toEqual(["enum yyy {", "  X", "  Y", "}"]);
+    expect(blocks[2].getLines()).toEqual(["enum Zzz {", "  X", "  Y", "}"]);
+  });
+
   test("configs - miss", () => {
     // Arrange
     const configs: EnumNameRule.Config[] = [

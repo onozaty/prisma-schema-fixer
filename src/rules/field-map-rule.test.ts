@@ -133,6 +133,48 @@ describe("apply", () => {
     ]);
   });
 
+  test("configs - exclude", () => {
+    // Arrange
+    const configs: FieldMapRule.Config[] = [
+      { case: "pascal" },
+      { targets: { model: "UserProfile" } },
+      { targets: { model: "User", field: "email" } },
+    ];
+    const blocks: Block[] = [
+      new ModelBlock([
+        "model User {",
+        "  id        Int      @id @default(autoincrement())",
+        "  createdAt DateTime @default(now())",
+        "  email     String   @unique",
+        "}",
+      ]),
+      new ModelBlock([
+        "model UserProfile {",
+        "  id   Int    @id @default(autoincrement())",
+        '  name String @map("XXXX")',
+        "}",
+      ]),
+    ];
+
+    // Act
+    FieldMapRule.apply(configs, blocks);
+
+    // Assert
+    expect(blocks[0].getLines()).toEqual([
+      "model User {",
+      '  id        Int @map("Id")       @id @default(autoincrement())',
+      '  createdAt DateTime @map("CreatedAt")  @default(now())',
+      "  email     String   @unique",
+      "}",
+    ]);
+    expect(blocks[1].getLines()).toEqual([
+      "model UserProfile {",
+      "  id   Int    @id @default(autoincrement())",
+      '  name String @map("XXXX")',
+      "}",
+    ]);
+  });
+
   test("configs - miss", () => {
     // Arrange
     const configs: FieldMapRule.Config[] = [

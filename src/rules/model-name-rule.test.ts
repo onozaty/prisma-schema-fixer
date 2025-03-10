@@ -213,6 +213,55 @@ describe("apply", () => {
     ]);
   });
 
+  test("configs - exclude", () => {
+    // Arrange
+    const configs: ModelNameRule.Config[] = [
+      { case: "pascal" },
+      { targets: ["userProfile"] },
+    ];
+    const blocks: Block[] = [
+      new ModelBlock([
+        "model user {",
+        "  id    Int    @id @default(autoincrement())",
+        "  email String @unique",
+        "}",
+      ]),
+      new ModelBlock([
+        "model userProfile {",
+        "  id   Int      @id @default(autoincrement())",
+        "  name String?",
+        "}",
+      ]),
+      new ModelBlock([
+        "model XXXX {",
+        "  id Int @id @default(autoincrement())",
+        "}",
+      ]),
+    ];
+
+    // Act
+    ModelNameRule.apply(configs, blocks);
+
+    // Assert
+    expect(blocks[0].getLines()).toEqual([
+      "model User {",
+      "  id    Int    @id @default(autoincrement())",
+      "  email String @unique",
+      "}",
+    ]);
+    expect(blocks[1].getLines()).toEqual([
+      "model userProfile {",
+      "  id   Int      @id @default(autoincrement())",
+      "  name String?",
+      "}",
+    ]);
+    expect(blocks[2].getLines()).toEqual([
+      "model Xxxx {",
+      "  id Int @id @default(autoincrement())",
+      "}",
+    ]);
+  });
+
   test("configs - miss", () => {
     // Arrange
     const configs: ModelNameRule.Config[] = [

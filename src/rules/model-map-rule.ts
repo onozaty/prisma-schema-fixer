@@ -19,7 +19,8 @@ export namespace ModelMapRule {
     for (const modelBlock of ModelBlock.filter(blocks)) {
       const modelName = modelBlock.getModelName();
       const config = selectConfigByName(configs, modelName);
-      if (config === undefined) {
+      if (config?.case === undefined && config?.form === undefined) {
+        // if no config, skip
         continue;
       }
 

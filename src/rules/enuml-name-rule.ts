@@ -20,7 +20,8 @@ export namespace EnumNameRule {
     for (const enumBlock of EnumBlock.filter(blocks)) {
       const enumName = enumBlock.getEnumName();
       const config = selectConfigByName(configs, enumName);
-      if (config === undefined) {
+      if (config?.case === undefined && config?.form === undefined) {
+        // if no config, skip
         continue;
       }
 

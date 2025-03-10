@@ -122,6 +122,48 @@ describe("apply", () => {
     ]);
   });
 
+  test("configs - exclude", () => {
+    // Arrange
+    const configs: FieldNameRule.Config[] = [
+      { case: "pascal" },
+      { targets: { model: "UserProfile" } },
+      { targets: { model: "User", field: "email" } },
+    ];
+    const blocks: Block[] = [
+      new ModelBlock([
+        "model User {",
+        "  id        Int      @id @default(autoincrement())",
+        "  createdAt DateTime @default(now())",
+        "  email     String   @unique",
+        "}",
+      ]),
+      new ModelBlock([
+        "model UserProfile {",
+        "  id   Int    @id @default(autoincrement())",
+        "  name String",
+        "}",
+      ]),
+    ];
+
+    // Act
+    FieldNameRule.apply(configs, blocks);
+
+    // Assert
+    expect(blocks[0].getLines()).toEqual([
+      "model User {",
+      "  Id        Int      @id @default(autoincrement())",
+      "  CreatedAt DateTime @default(now())",
+      "  email     String   @unique",
+      "}",
+    ]);
+    expect(blocks[1].getLines()).toEqual([
+      "model UserProfile {",
+      "  id   Int    @id @default(autoincrement())",
+      "  name String",
+      "}",
+    ]);
+  });
+
   test("configs - miss", () => {
     // Arrange
     const configs: FieldNameRule.Config[] = [

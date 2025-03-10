@@ -142,4 +142,56 @@ describe("ModelBlock", () => {
     expect(field4.getRelationFields()).toEqual(undefined);
     expect(field4.getRelationReferences()).toEqual(undefined);
   });
+
+  test("Unsupported", () => {
+    // Arrange
+    const lines = [
+      "model X {",
+      "  id        String                                 @id @default(uuid())",
+      `  position  Unsupported("circle")                  @default(dbgenerated("'<(10,4),11>'::circle"))`,
+      '  geo       Unsupported("geometry(Point, 4326)")?',
+      '  geos      Unsupported("geometry(Point, 4326)")[] @map("geos")',
+      "}",
+    ];
+
+    // Act
+    const modelBlock = new ModelBlock();
+    lines.forEach((line) => modelBlock.appendLine(line));
+
+    // Assert
+    expect(modelBlock.getLines()).toEqual(lines);
+    expect(modelBlock.getModelName()).toEqual("X");
+    expect(modelBlock.getMap()).toEqual(undefined);
+
+    const fieldLines = modelBlock.getFieldLines();
+    expect(fieldLines).toHaveLength(4);
+    const field1 = fieldLines[0];
+    expect(field1.getFieldName()).toEqual("id");
+    expect(field1.getFieldType()).toEqual("String");
+    expect(field1.getMap()).toEqual(undefined);
+    expect(field1.getRelationFields()).toEqual(undefined);
+    expect(field1.getRelationReferences()).toEqual(undefined);
+    const field2 = fieldLines[1];
+    expect(field2.getFieldName()).toEqual("position");
+    expect(field2.getFieldType()).toEqual('Unsupported("circle")');
+    expect(field2.getMap()).toEqual(undefined);
+    expect(field2.getRelationFields()).toEqual(undefined);
+    expect(field2.getRelationReferences()).toEqual(undefined);
+    const field3 = fieldLines[2];
+    expect(field3.getFieldName()).toEqual("geo");
+    expect(field3.getFieldType()).toEqual(
+      'Unsupported("geometry(Point, 4326)")?',
+    );
+    expect(field3.getMap()).toEqual(undefined);
+    expect(field3.getRelationFields()).toEqual(undefined);
+    expect(field3.getRelationReferences()).toEqual(undefined);
+    const field4 = fieldLines[3];
+    expect(field4.getFieldName()).toEqual("geos");
+    expect(field4.getFieldType()).toEqual(
+      'Unsupported("geometry(Point, 4326)")[]',
+    );
+    expect(field4.getMap()).toEqual("geos");
+    expect(field4.getRelationFields()).toEqual(undefined);
+    expect(field4.getRelationReferences()).toEqual(undefined);
+  });
 });

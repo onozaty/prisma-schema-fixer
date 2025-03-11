@@ -83,7 +83,7 @@ export default {
 };
 ```
 
-## 4. Roules
+## 4. Rules
 
 ### (1) model-name
 

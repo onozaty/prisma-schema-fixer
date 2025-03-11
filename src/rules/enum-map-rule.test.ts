@@ -80,6 +80,36 @@ describe("apply", () => {
     expect(blocks[2].getLines()).toEqual(["enum xs {", "  X", "  Y", "}"]);
   });
 
+  test("func", () => {
+    // Arrange
+    const configs: EnumMapRule.Config[] = [{ func: (v) => v.toUpperCase() }];
+    const blocks: Block[] = [
+      new EnumBlock(["enum User {", "  X", "  Y", "}"]),
+      new EnumBlock(["enum UserType {", "  USER", "  ADMIN", "}"]),
+      new EnumBlock(["enum XS {", "  X", "  Y", "}"]),
+    ];
+
+    // Act
+    EnumMapRule.apply(configs, blocks);
+
+    // Assert
+    expect(blocks[0].getLines()).toEqual([
+      "enum User {",
+      "  X",
+      "  Y",
+      '  @@map("USER")',
+      "}",
+    ]);
+    expect(blocks[1].getLines()).toEqual([
+      "enum UserType {",
+      "  USER",
+      "  ADMIN",
+      '  @@map("USERTYPE")',
+      "}",
+    ]);
+    expect(blocks[2].getLines()).toEqual(["enum XS {", "  X", "  Y", "}"]);
+  });
+
   test("case & form", () => {
     // Arrange
     const configs: EnumMapRule.Config[] = [{ case: "snake", form: "plural" }];
@@ -110,6 +140,42 @@ describe("apply", () => {
       "  USER",
       "  ADMIN",
       '  @@map("user_types") // comment',
+      "}",
+    ]);
+  });
+
+  test("case & form & func", () => {
+    // Arrange
+    const configs: EnumMapRule.Config[] = [
+      { case: "snake", form: "plural", func: (value) => `enum_${value}` },
+    ];
+    const blocks: Block[] = [
+      new EnumBlock(["enum User {", "  X", "  Y", "}"]),
+      new EnumBlock([
+        "enum UserType {",
+        "  USER",
+        "  ADMIN",
+        '  @@map("xxxx") // comment',
+        "}",
+      ]),
+    ];
+
+    // Act
+    EnumMapRule.apply(configs, blocks);
+
+    // Assert
+    expect(blocks[0].getLines()).toEqual([
+      "enum User {",
+      "  X",
+      "  Y",
+      '  @@map("enum_users")',
+      "}",
+    ]);
+    expect(blocks[1].getLines()).toEqual([
+      "enum UserType {",
+      "  USER",
+      "  ADMIN",
+      '  @@map("enum_user_types") // comment',
       "}",
     ]);
   });

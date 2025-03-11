@@ -61,6 +61,80 @@ describe("apply", () => {
     expect(blocks[4].getLines()).toEqual(["// User"]);
   });
 
+  test("func", () => {
+    // Arrange
+    const configs: FieldNameRule.Config[] = [{ func: (v) => v.toUpperCase() }];
+    const blocks: Block[] = [
+      new ModelBlock([
+        "model User {",
+        "  Id        Int      @id @default(autoincrement())",
+        "  CreatedAt DateTime @default(now())",
+        "}",
+      ]),
+      new ModelBlock([
+        "model UserProfile {",
+        "  id   Int    @id @default(autoincrement())",
+        "  name String?",
+        "}",
+      ]),
+    ];
+
+    // Act
+    FieldNameRule.apply(configs, blocks);
+
+    // Assert
+    expect(blocks[0].getLines()).toEqual([
+      "model User {",
+      "  ID        Int      @id @default(autoincrement())",
+      "  CREATEDAT DateTime @default(now())",
+      "}",
+    ]);
+    expect(blocks[1].getLines()).toEqual([
+      "model UserProfile {",
+      "  ID   Int    @id @default(autoincrement())",
+      "  NAME String?",
+      "}",
+    ]);
+  });
+
+  test("case & func", () => {
+    // Arrange
+    const configs: FieldNameRule.Config[] = [
+      { case: "snake", func: (v) => v.toUpperCase() },
+    ];
+    const blocks: Block[] = [
+      new ModelBlock([
+        "model User {",
+        "  Id        Int      @id @default(autoincrement())",
+        "  CreatedAt DateTime @default(now())",
+        "}",
+      ]),
+      new ModelBlock([
+        "model UserProfile {",
+        "  id   Int    @id @default(autoincrement())",
+        "  name String?",
+        "}",
+      ]),
+    ];
+
+    // Act
+    FieldNameRule.apply(configs, blocks);
+
+    // Assert
+    expect(blocks[0].getLines()).toEqual([
+      "model User {",
+      "  ID        Int      @id @default(autoincrement())",
+      "  CREATED_AT DateTime @default(now())",
+      "}",
+    ]);
+    expect(blocks[1].getLines()).toEqual([
+      "model UserProfile {",
+      "  ID   Int    @id @default(autoincrement())",
+      "  NAME String?",
+      "}",
+    ]);
+  });
+
   test("configs", () => {
     // Arrange
     const configs: FieldNameRule.Config[] = [

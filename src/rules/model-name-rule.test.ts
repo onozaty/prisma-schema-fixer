@@ -113,6 +113,38 @@ describe("apply", () => {
     ]);
   });
 
+  test("func", () => {
+    // Arrange
+    const configs: ModelNameRule.Config[] = [{ func: (v) => v.toUpperCase() }];
+    const blocks: Block[] = [
+      new ModelBlock([
+        "model User {",
+        "  id Int @id @default(autoincrement())",
+        "}",
+      ]),
+      new ModelBlock([
+        "model UserProfile {",
+        "  id Int @id @default(autoincrement())",
+        "}",
+      ]),
+    ];
+
+    // Act
+    ModelNameRule.apply(configs, blocks);
+
+    // Assert
+    expect(blocks[0].getLines()).toEqual([
+      "model USER {",
+      "  id Int @id @default(autoincrement())",
+      "}",
+    ]);
+    expect(blocks[1].getLines()).toEqual([
+      "model USERPROFILE {",
+      "  id Int @id @default(autoincrement())",
+      "}",
+    ]);
+  });
+
   test("case & form", () => {
     // Arrange
     const configs: ModelNameRule.Config[] = [
@@ -158,6 +190,56 @@ describe("apply", () => {
       "  name   String?",
       "  bio    String?",
       "  user   user  @relation(fields: [user_id], references: [id])",
+      "  userId Int    @unique",
+      "}",
+    ]);
+  });
+
+  test("case & form & func", () => {
+    // Arrange
+    const configs: ModelNameRule.Config[] = [
+      { case: "snake", form: "singular", func: (v) => `${v}_1` },
+    ];
+    const blocks: Block[] = [
+      new ModelBlock([
+        "model Users {",
+        "  id        Int      @id @default(autoincrement())",
+        "  createdAt DateTime @default(now())",
+        "  email     String   @unique",
+        "  role      Role     @default(USER)",
+        "  profile   UserProfile?",
+        "}",
+      ]),
+      new ModelBlock([
+        "model UserProfile {",
+        "  id     Int    @id @default(autoincrement())",
+        "  name   String?",
+        "  bio    String?",
+        "  user   Users  @relation(fields: [user_id], references: [id])",
+        "  userId Int    @unique",
+        "}",
+      ]),
+    ];
+
+    // Act
+    ModelNameRule.apply(configs, blocks);
+
+    // Assert
+    expect(blocks[0].getLines()).toEqual([
+      "model user_1 {",
+      "  id        Int      @id @default(autoincrement())",
+      "  createdAt DateTime @default(now())",
+      "  email     String   @unique",
+      "  role      Role     @default(USER)",
+      "  profile   user_profile_1?",
+      "}",
+    ]);
+    expect(blocks[1].getLines()).toEqual([
+      "model user_profile_1 {",
+      "  id     Int    @id @default(autoincrement())",
+      "  name   String?",
+      "  bio    String?",
+      "  user   user_1  @relation(fields: [user_id], references: [id])",
       "  userId Int    @unique",
       "}",
     ]);

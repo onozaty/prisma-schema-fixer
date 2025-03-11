@@ -13,13 +13,18 @@ export namespace EnumMapRule {
     targets?: NameTargets;
     case?: Case;
     form?: Form;
+    func?: (value: string, target: { name: string }) => string;
   };
 
   export const apply = (configs: Config[], blocks: Block[]): void => {
     for (const enumBlock of EnumBlock.filter(blocks)) {
       const enumName = enumBlock.getEnumName();
       const config = selectConfigByName(configs, enumName);
-      if (config?.case === undefined && config?.form === undefined) {
+      if (
+        config?.case === undefined &&
+        config?.form === undefined &&
+        config?.func === undefined
+      ) {
         // if no config, skip
         continue;
       }
@@ -30,6 +35,9 @@ export namespace EnumMapRule {
       }
       if (config.form !== undefined) {
         map = changeForm(map, config.form);
+      }
+      if (config.func !== undefined) {
+        map = config.func(map, { name: enumName });
       }
 
       if (enumName !== map) {

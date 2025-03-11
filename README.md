@@ -90,6 +90,8 @@ Rules for model names.
 - `form`: Specify singular or plural form.
   - `singular`: Singular
   - `plural`: Plural
+- `func`: A custom function to transform.
+  - `(value: string, target: { name: string }) => string`
 
 Using the following rule:
 
@@ -127,6 +129,9 @@ Rules for table names corresponding to models.
 - `form`: Specify singular or plural form.
   - `singular`: Singular
   - `plural`: Plural
+- `func`: A custom function to transform.
+  - `(value: string, target: { name: string }) => string`
+
 
 Using the following rule:
 
@@ -162,6 +167,8 @@ Rules for field names.
   - `pascal`: PascalCase
   - `camel`: camelCase
   - `snake`: snake_case
+- `func`: A custom function to transform.
+  - `(value: string, target: { model: string; field: string; type: string }) => string;`
 
 Using the following rule:
 
@@ -197,6 +204,8 @@ Rules for column names corresponding to fields.
   - `pascal`: PascalCase
   - `camel`: camelCase
   - `snake`: snake_case
+- `func`: A custom function to transform.
+  - `(value: string, target: { model: string; field: string; type: string }) => string;`
 
 Using the following rule:
 
@@ -233,6 +242,8 @@ Rules for enum names.
 - `form`: Specify singular or plural form.
   - `singular`: Singular
   - `plural`: Plural
+- `func`: A custom function to transform.
+  - `(value: string, target: { name: string }) => string`
 
 Using the following rule:
 
@@ -270,6 +281,8 @@ Rules for database-side enum names corresponding to enums.
 - `form`: Specify singular or plural form.
   - `singular`: Singular
   - `plural`: Plural
+- `func`: A custom function to transform.
+  - `(value: string, target: { name: string }) => string`
 
 Using the following rule:
 
@@ -280,6 +293,7 @@ export default {
       {
         case: "snake",
         form: "plural",
+        func: (value) => `enum_${value}`,
       },
     ],
   },
@@ -293,7 +307,7 @@ enum Role {
   USER
   ADMIN
 +
-+ @@map("roles")
++ @@map("enum_roles")
 }
 ```
 

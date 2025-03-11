@@ -101,6 +101,43 @@ describe("apply", () => {
     ]);
   });
 
+  test("func", () => {
+    // Arrange
+    const configs: ModelMapRule.Config[] = [{ func: (v) => `_${v}_` }];
+    const blocks: Block[] = [
+      new ModelBlock([
+        "model Users {",
+        "  id Int @id @default(autoincrement())",
+        "}",
+      ]),
+      new ModelBlock([
+        "model UserProfile {",
+        "  id     Int    @id @default(autoincrement())",
+        "  name   String?",
+        '  @@map("XXXX")',
+        "}",
+      ]),
+    ];
+
+    // Act
+    ModelMapRule.apply(configs, blocks);
+
+    // Assert
+    expect(blocks[0].getLines()).toEqual([
+      "model Users {",
+      "  id Int @id @default(autoincrement())",
+      '  @@map("_Users_")',
+      "}",
+    ]);
+    expect(blocks[1].getLines()).toEqual([
+      "model UserProfile {",
+      "  id     Int    @id @default(autoincrement())",
+      "  name   String?",
+      '  @@map("_UserProfile_")',
+      "}",
+    ]);
+  });
+
   test("case & form", () => {
     // Arrange
     const configs: ModelMapRule.Config[] = [{ case: "snake", form: "plural" }];
@@ -134,6 +171,45 @@ describe("apply", () => {
       "  id     Int    @id @default(autoincrement())",
       "  name   String?",
       '  @@map("user_profiles")',
+      "}",
+    ]);
+  });
+
+  test("case & form & func", () => {
+    // Arrange
+    const configs: ModelMapRule.Config[] = [
+      { case: "snake", form: "plural", func: (v) => `_${v}` },
+    ];
+    const blocks: Block[] = [
+      new ModelBlock([
+        "model User {",
+        "  id Int @id @default(autoincrement())",
+        "}",
+      ]),
+      new ModelBlock([
+        "model UserProfile {",
+        "  id     Int    @id @default(autoincrement())",
+        "  name   String?",
+        '  @@map("user_profiles")',
+        "}",
+      ]),
+    ];
+
+    // Act
+    ModelMapRule.apply(configs, blocks);
+
+    // Assert
+    expect(blocks[0].getLines()).toEqual([
+      "model User {",
+      "  id Int @id @default(autoincrement())",
+      '  @@map("_users")',
+      "}",
+    ]);
+    expect(blocks[1].getLines()).toEqual([
+      "model UserProfile {",
+      "  id     Int    @id @default(autoincrement())",
+      "  name   String?",
+      '  @@map("_user_profiles")',
       "}",
     ]);
   });

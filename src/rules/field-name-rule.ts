@@ -8,6 +8,10 @@ export namespace FieldNameRule {
   export type Config = {
     targets?: FieldTargets;
     case?: Case;
+    func?: (
+      value: string,
+      target: { model: string; field: string; type: string },
+    ) => string;
   };
 
   export const apply = (configs: Config[], blocks: Block[]): void => {
@@ -18,7 +22,7 @@ export namespace FieldNameRule {
       for (const field of fields) {
         const fieldName = field.getFieldName();
         const config = selectConfigByField(configs, modelName, fieldName);
-        if (config?.case === undefined) {
+        if (config?.case === undefined && config?.func === undefined) {
           // if no config, skip
           continue;
         }
@@ -26,6 +30,13 @@ export namespace FieldNameRule {
         let changedFieldName = fieldName;
         if (config.case !== undefined) {
           changedFieldName = changeCase(changedFieldName, config.case);
+        }
+        if (config.func !== undefined) {
+          changedFieldName = config.func(changedFieldName, {
+            model: modelName,
+            field: fieldName,
+            type: field.getFieldType(),
+          });
         }
 
         if (fieldName !== changedFieldName) {

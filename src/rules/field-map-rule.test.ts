@@ -72,6 +72,99 @@ describe("apply", () => {
     expect(blocks[4].getLines()).toEqual(["// Comment"]);
   });
 
+  test("func", () => {
+    // Arrange
+    const configs: FieldMapRule.Config[] = [
+      {
+        func: (v, target) => {
+          if (target.field === "id") {
+            return `_${v}`;
+          }
+          return v;
+        },
+      },
+    ];
+    const blocks: Block[] = [
+      new ModelBlock([
+        "model User {",
+        "  id        Int      @id @default(autoincrement())",
+        "  createdAt DateTime @default(now())",
+        "}",
+      ]),
+      new ModelBlock([
+        "model UserProfile {",
+        "  id        Int      @id @default(autoincrement())",
+        "  createdAt DateTime @default(now())",
+        "}",
+      ]),
+    ];
+
+    // Act
+    FieldMapRule.apply(configs, blocks);
+
+    // Assert
+    expect(blocks[0].getLines()).toEqual([
+      "model User {",
+      '  id        Int @map("_id")       @id @default(autoincrement())',
+      "  createdAt DateTime @default(now())",
+      "}",
+    ]);
+    expect(blocks[1].getLines()).toEqual([
+      "model UserProfile {",
+      '  id        Int @map("_id")       @id @default(autoincrement())',
+      "  createdAt DateTime @default(now())",
+      "}",
+    ]);
+  });
+
+  test("case & func", () => {
+    // Arrange
+    const configs: FieldMapRule.Config[] = [
+      {
+        case: "snake",
+        func: (v, target) => {
+          if (target.type.startsWith("String")) {
+            return v.toUpperCase();
+          }
+          return v;
+        },
+      },
+    ];
+    const blocks: Block[] = [
+      new ModelBlock([
+        "model User {",
+        "  id        Int      @id @default(autoincrement())",
+        "  createdAt DateTime @default(now())",
+        "}",
+      ]),
+      new ModelBlock([
+        "model UserProfile {",
+        "  id          Int      @id @default(autoincrement())",
+        "  companyName String?",
+        "  createdAt   DateTime @default(now())",
+        "}",
+      ]),
+    ];
+
+    // Act
+    FieldMapRule.apply(configs, blocks);
+
+    // Assert
+    expect(blocks[0].getLines()).toEqual([
+      "model User {",
+      "  id        Int      @id @default(autoincrement())",
+      '  createdAt DateTime @map("created_at")  @default(now())',
+      "}",
+    ]);
+    expect(blocks[1].getLines()).toEqual([
+      "model UserProfile {",
+      "  id          Int      @id @default(autoincrement())",
+      '  companyName String? @map("COMPANY_NAME") ',
+      '  createdAt   DateTime @map("created_at")  @default(now())',
+      "}",
+    ]);
+  });
+
   test("configs", () => {
     // Arrange
     const configs: FieldMapRule.Config[] = [

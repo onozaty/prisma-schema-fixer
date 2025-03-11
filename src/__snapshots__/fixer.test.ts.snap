@@ -1,5 +1,57 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
+exports[`fix > all 1`] = `
+"datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id        Int          @id @default(autoincrement())
+  createdAt DateTime     @default(now()) @map("created_at")
+  email     String       @unique
+  role      Role         @default(USER)
+  posts     Post[]
+  profile   UserProfile?
+
+  @@map("users")
+}
+
+model UserProfile {
+  id     Int     @id @default(autoincrement())
+  name   String?
+  bio    String?
+  user   User    @relation(fields: [userId], references: [id])
+  userId Int     @unique @map("user_id")
+
+  @@map("user_profiles")
+}
+
+model Post {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  published Boolean  @default(false)
+  title     String   @db.VarChar(255)
+  author    User?    @relation(fields: [authorId], references: [id])
+  authorId  Int?     @map("author_id")
+
+  @@map("posts")
+}
+
+enum Role {
+  USER
+  ADMIN
+
+  @@map("roles")
+}
+"
+`;
+
 exports[`fix > enum-map 1`] = `
 "datasource db {
   provider = "postgresql"
@@ -28,13 +80,13 @@ model userProfile {
 }
 
 model post {
-  id        Int      @id @default(autoincrement())
+  Id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   published Boolean  @default(false)
   title     String   @db.VarChar(255)
-  author    User?    @relation(fields: [authorId], references: [id])
-  authorId  Int?
+  author    User?    @relation(fields: [author_id], references: [id])
+  author_id Int?
 }
 
 enum Role {
@@ -74,13 +126,13 @@ model userProfile {
 }
 
 model post {
-  id        Int      @id @default(autoincrement())
+  Id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   published Boolean  @default(false)
   title     String   @db.VarChar(255)
-  author    User?    @relation(fields: [authorId], references: [id])
-  authorId  Int?
+  author    User?    @relation(fields: [author_id], references: [id])
+  author_id Int?
 }
 
 enum Roles {
@@ -118,13 +170,13 @@ model userProfile {
 }
 
 model post {
-  id        Int      @id @default(autoincrement())
+  Id        Int      @id @default(autoincrement()) @map("id")
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
   published Boolean  @default(false)
   title     String   @db.VarChar(255)
-  author    User?    @relation(fields: [authorId], references: [id])
-  authorId  Int?     @map("author_id")
+  author    User?    @relation(fields: [author_id], references: [id])
+  author_id Int?
 }
 
 enum Role {
@@ -210,13 +262,13 @@ model userProfile {
 }
 
 model post {
-  id        Int      @id @default(autoincrement())
+  Id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   published Boolean  @default(false)
   title     String   @db.VarChar(255)
-  author    User?    @relation(fields: [authorId], references: [id])
-  authorId  Int?
+  author    User?    @relation(fields: [author_id], references: [id])
+  author_id Int?
 
   @@map("posts")
 }
@@ -256,13 +308,13 @@ model UserProfile {
 }
 
 model Post {
-  id        Int      @id @default(autoincrement())
+  Id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   published Boolean  @default(false)
   title     String   @db.VarChar(255)
-  author    User?    @relation(fields: [authorId], references: [id])
-  authorId  Int?
+  author    User?    @relation(fields: [author_id], references: [id])
+  author_id Int?
 }
 
 enum Role {

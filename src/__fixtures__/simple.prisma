@@ -25,13 +25,13 @@ model userProfile {
 }
 
 model post {
-  id        Int      @id @default(autoincrement())
+  Id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   published Boolean  @default(false)
   title     String   @db.VarChar(255)
-  author    User?    @relation(fields: [authorId], references: [id])
-  authorId  Int?
+  author    User?    @relation(fields: [author_id], references: [id])
+  author_id Int?
 }
 
 enum Role {

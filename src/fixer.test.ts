@@ -122,6 +122,54 @@ describe("fix", () => {
     // Assert
     expect(result).toMatchSnapshot();
   });
+  test("all", async () => {
+    // Arrange
+    const content = readFixture("simple.prisma");
+    const config = defineConfig({
+      rules: {
+        "model-name": [
+          {
+            case: "pascal",
+            form: "singular",
+          },
+        ],
+        "model-map": [
+          {
+            case: "snake",
+            form: "plural",
+          },
+        ],
+        "field-name": [
+          {
+            case: "camel",
+          },
+        ],
+        "field-map": [
+          {
+            case: "snake",
+          },
+        ],
+        "enum-name": [
+          {
+            case: "pascal",
+            form: "singular",
+          },
+        ],
+        "enum-map": [
+          {
+            case: "snake",
+            form: "plural",
+          },
+        ],
+      },
+    });
+
+    // Act
+    const result = await fix(content, config);
+
+    // Assert
+    expect(result).toMatchSnapshot();
+  });
 });
 
 const readFixture = (name: string): string => {

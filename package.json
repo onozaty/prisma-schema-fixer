@@ -1,6 +1,6 @@
 {
   "name": "@onozaty/prisma-schema-fixer",
-  "version": "0.0.4",
+  "version": "0.1.0",
   "description": "Fix schema.prisma according to the rules",
   "type": "module",
   "bin": {

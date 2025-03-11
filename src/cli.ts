@@ -80,10 +80,10 @@ const run = async () => {
       console.log(fixedContent);
     } else {
       if (content === fixedContent) {
-        console.log("No changes were necessary for the schema file.");
+        console.log("✅ No changes were necessary for the schema file.");
       } else {
         writePrismaSchema(options.file, fixedContent);
-        console.log("Schema file has been fixed and saved successfully.");
+        console.log("✨ Schema file has been fixed and saved successfully.");
       }
     }
   } catch (error) {

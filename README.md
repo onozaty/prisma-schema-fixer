@@ -10,7 +10,13 @@ npm install --save-dev @onozaty/prisma-schema-fixer
 
 ## 2. Usage
 
-Run the following command to fix your schema file:
+Run the following command to fix your schema file using the default paths:
+
+```sh
+npx prisma-schema-fixer
+```
+
+Run the following command to fix your schema file with specified paths:
 
 ```sh
 npx prisma-schema-fixer -f path/to/schema.prisma -c path/to/schema-fixer.config.mjs
@@ -22,8 +28,8 @@ Usage: prisma-schema-fixer [options]
 Fix schema.prisma according to the rules
 
 Options:
-  -f, --file <schemaFile>         Path to `schema.prisma` file (default: "./prisma/schema.prisma")
-  -c, --config-file <configFile>  Path to configuration file (default: "./prisma/schema-fixer.config.mjs")
+  -f, --file <schemaFile>         Path to `schema.prisma` file (default: "prisma/schema.prisma")
+  -c, --config-file <configFile>  Path to configuration file (default: "prisma/schema-fixer.config.mjs")
   -n, --dry-run                   Show changes in the console instead of modifying the file (default: false)
   -V, --version                   output the version number
   -h, --help                      display help for command

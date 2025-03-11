@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import { Command } from "commander";
 import fs from "fs";
-import { resolve } from "path";
+import { dirname, join, resolve } from "path";
 import { pathToFileURL } from "url";
 import { version } from "../package.json";
 import { Config } from "./config";
@@ -33,6 +33,18 @@ const writePrismaSchema = (schemaFilePath: string, content: string) => {
   fs.writeFileSync(absolutePath, content, "utf-8");
 };
 
+const getDefaultSchemaPath = (): string => {
+  const packageJson = JSON.parse(
+    fs.readFileSync(resolve(process.cwd(), "package.json"), "utf-8"),
+  );
+  return packageJson.prisma?.schema || "prisma/schema.prisma";
+};
+
+const getDefaultConfigPath = (schemaFilePath: string): string => {
+  const schemaDir = dirname(schemaFilePath);
+  return join(schemaDir, "schema-fixer.config.mjs");
+};
+
 const run = async () => {
   const program = new Command();
   program
@@ -41,12 +53,12 @@ const run = async () => {
     .option(
       "-f, --file <schemaFile>",
       "Path to `schema.prisma` file",
-      "./prisma/schema.prisma",
+      getDefaultSchemaPath(),
     )
     .option(
       "-c, --config-file <configFile>",
       "Path to configuration file",
-      "./prisma/schema-fixer.config.mjs",
+      getDefaultConfigPath(getDefaultSchemaPath()),
     )
     .option(
       "-n, --dry-run",
@@ -60,8 +72,8 @@ const run = async () => {
   const options = program.opts();
 
   try {
-    const config = await loadConfigFile(options.configFile);
     const content = readPrismaSchema(options.file);
+    const config = await loadConfigFile(options.configFile);
     const fixedContent = await fix(content, config);
 
     if (options.dryRun) {

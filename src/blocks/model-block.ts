@@ -61,6 +61,19 @@ export class ModelBlock implements Block {
       .filter((line): line is FieldLine => line instanceof FieldLine)
       .map((line) => line);
   }
+  getIdLine(): IdLine | undefined {
+    return this.lines.find((line): line is IdLine => line instanceof IdLine);
+  }
+  getUniqueLines(): UniqueLine[] {
+    return this.lines.filter(
+      (line): line is UniqueLine => line instanceof UniqueLine,
+    );
+  }
+  getIndexLines(): IndexLine[] {
+    return this.lines.filter(
+      (line): line is IndexLine => line instanceof IndexLine,
+    );
+  }
 
   static filter(blocks: Block[]): ModelBlock[] {
     return blocks.filter(
@@ -89,6 +102,15 @@ const parseLine = (line: string): Line => {
   }
   if ((match = line.match(MapLine.LINE_REGEX)) !== null) {
     return new MapLine(match);
+  }
+  if ((match = line.match(IdLine.LINE_REGEX)) !== null) {
+    return new IdLine(match);
+  }
+  if ((match = line.match(UniqueLine.LINE_REGEX)) !== null) {
+    return new UniqueLine(match);
+  }
+  if ((match = line.match(IndexLine.LINE_REGEX)) !== null) {
+    return new IndexLine(match);
   }
   return new OtherLine(line);
 };
@@ -266,6 +288,60 @@ class MapLine implements Line {
         : "") +
       this.after
     );
+  }
+}
+
+class IdLine implements Line {
+  static readonly LINE_REGEX =
+    /^(?<before>\s+@@id\(\[)(?<fields>[^[]+)(?<after>\]\).*)$/;
+
+  private readonly before: string;
+  fields: string[];
+  private readonly after: string;
+
+  constructor(match: RegExpMatchArray) {
+    this.before = match.groups!.before;
+    this.fields = match.groups!.fields.split(",").map((field) => field.trim());
+    this.after = match.groups!.after;
+  }
+  toString(): string {
+    return `${this.before}${this.fields.join(", ")}${this.after}`;
+  }
+}
+
+class UniqueLine implements Line {
+  static readonly LINE_REGEX =
+    /^(?<before>\s+@@unique\(\[)(?<fields>[^[]+)(?<after>\]\).*)$/;
+
+  private readonly before: string;
+  fields: string[];
+  private readonly after: string;
+
+  constructor(match: RegExpMatchArray) {
+    this.before = match.groups!.before;
+    this.fields = match.groups!.fields.split(",").map((field) => field.trim());
+    this.after = match.groups!.after;
+  }
+  toString(): string {
+    return `${this.before}${this.fields.join(", ")}${this.after}`;
+  }
+}
+
+class IndexLine implements Line {
+  static readonly LINE_REGEX =
+    /^(?<before>\s+@@index\(\[)(?<fields>[^[]+)(?<after>\]\).*)$/;
+
+  private readonly before: string;
+  fields: string[];
+  private readonly after: string;
+
+  constructor(match: RegExpMatchArray) {
+    this.before = match.groups!.before;
+    this.fields = match.groups!.fields.split(",").map((field) => field.trim());
+    this.after = match.groups!.after;
+  }
+  toString(): string {
+    return `${this.before}${this.fields.join(", ")}${this.after}`;
   }
 }
 

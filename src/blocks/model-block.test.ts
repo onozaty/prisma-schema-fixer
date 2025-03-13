@@ -194,4 +194,59 @@ describe("ModelBlock", () => {
     expect(field4.getRelationFields()).toEqual(undefined);
     expect(field4.getRelationReferences()).toEqual(undefined);
   });
+
+  test("id, unique, index", () => {
+    // Arrange
+    const lines = [
+      "model X {",
+      "  id1 Int",
+      "  id2 Int",
+      "  id3 Int",
+      "",
+      "  @@id([id1, id2])",
+      "  @@unique([id1])",
+      "  @@unique([id1(sort: Desc), id2, id3(sort: Asc)])",
+      "  @@index([id2, id3])",
+      "  @@index([id3(sort: Desc)])",
+      "}",
+    ];
+
+    // Act
+    const modelBlock = new ModelBlock();
+    lines.forEach((line) => modelBlock.appendLine(line));
+
+    // Assert
+    expect(modelBlock.getLines()).toEqual(lines);
+    expect(modelBlock.getModelName()).toEqual("X");
+    expect(modelBlock.getMap()).toEqual(undefined);
+    expect(modelBlock.getIdLine()?.fields).toEqual(["id1", "id2"]);
+    expect(modelBlock.getUniqueLines().map((x) => x.fields)).toEqual([
+      ["id1"],
+      ["id1(sort: Desc)", "id2", "id3(sort: Asc)"],
+    ]);
+    expect(modelBlock.getIndexLines().map((x) => x.fields)).toEqual([
+      ["id2", "id3"],
+      ["id3(sort: Desc)"],
+    ]);
+
+    const fieldLines = modelBlock.getFieldLines();
+    expect(fieldLines).toHaveLength(3);
+    const field1 = fieldLines[0];
+    expect(field1.getFieldName()).toEqual("id1");
+    expect(field1.getFieldType()).toEqual("Int");
+    expect(field1.getMap()).toEqual(undefined);
+    expect(field1.getRelationFields()).toEqual(undefined);
+    expect(field1.getRelationReferences()).toEqual(undefined);
+    const field2 = fieldLines[1];
+    expect(field2.getFieldName()).toEqual("id2");
+    expect(field2.getFieldType()).toEqual("Int");
+    expect(field2.getRelationFields()).toEqual(undefined);
+    expect(field2.getRelationReferences()).toEqual(undefined);
+    const field3 = fieldLines[2];
+    expect(field3.getFieldName()).toEqual("id3");
+    expect(field3.getFieldType()).toEqual("Int");
+    expect(field3.getMap()).toEqual(undefined);
+    expect(field3.getRelationFields()).toEqual(undefined);
+    expect(field3.getRelationReferences()).toEqual(undefined);
+  });
 });

@@ -75,6 +75,7 @@ describe("apply", () => {
         "model UserProfile {",
         "  id   Int    @id @default(autoincrement())",
         "  name String?",
+        "  @@unique([name])",
         "}",
       ]),
     ];
@@ -93,6 +94,7 @@ describe("apply", () => {
       "model UserProfile {",
       "  ID   Int    @id @default(autoincrement())",
       "  NAME String?",
+      "  @@unique([NAME])",
       "}",
     ]);
   });

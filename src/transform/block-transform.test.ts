@@ -308,6 +308,68 @@ describe("changeFieldName", () => {
       "}",
     ]);
   });
+
+  test("@@id @@unique @@index", () => {
+    // Arrange
+    const blocks: Block[] = [
+      new ModelBlock([
+        "model X {",
+        "  id1 Int",
+        "  id2 Int",
+        "  id3 Int",
+        "  @@id([id1, id2])",
+        "  @@unique([id2])",
+        "  @@unique([id1, id2(sort: Desc)])",
+        "  @@index([id1, id2(sort: Desc), id3])",
+        "  @@index([id1, id2])",
+        "}",
+      ]),
+      new ModelBlock([
+        "model Y {",
+        "  id1 Int",
+        "  id2 Int",
+        "  id3 Int",
+        "  @@id([id1, id2])",
+        "  @@unique([id2])",
+        "  @@unique([id1, id2(sort: Desc)])",
+        "  @@index([id1, id2(sort: Desc), id3])",
+        "  @@index([id1, id2])",
+        "}",
+      ]),
+    ];
+    const modelName = "X";
+    const from = "id2";
+    const to = "id2To";
+
+    // Act
+    changeFieldName(blocks, modelName, from, to);
+
+    // Assert
+    expect(blocks[0].getLines()).toEqual([
+      "model X {",
+      "  id1 Int",
+      "  id2To Int",
+      "  id3 Int",
+      "  @@id([id1, id2To])",
+      "  @@unique([id2To])",
+      "  @@unique([id1, id2To(sort: Desc)])",
+      "  @@index([id1, id2To(sort: Desc), id3])",
+      "  @@index([id1, id2To])",
+      "}",
+    ]);
+    expect(blocks[1].getLines()).toEqual([
+      "model Y {",
+      "  id1 Int",
+      "  id2 Int",
+      "  id3 Int",
+      "  @@id([id1, id2])",
+      "  @@unique([id2])",
+      "  @@unique([id1, id2(sort: Desc)])",
+      "  @@index([id1, id2(sort: Desc), id3])",
+      "  @@index([id1, id2])",
+      "}",
+    ]);
+  });
 });
 
 describe("changeEnumName", () => {

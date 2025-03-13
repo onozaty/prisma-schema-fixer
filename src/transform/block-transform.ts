@@ -48,6 +48,41 @@ export const changeFieldName = (
           );
         }
       }
+
+      // change id line
+      const idLine = modekBlock.getIdLine();
+      if (idLine !== undefined) {
+        idLine.fields = idLine.fields.map((field) => {
+          if (field === from) {
+            return to;
+          }
+          return field;
+        });
+      }
+
+      // change unique line
+      const uniqueLines = modekBlock.getUniqueLines();
+      for (const uniqueLine of uniqueLines) {
+        uniqueLine.fields = uniqueLine.fields.map((field) => {
+          // id(sort: Desc) -> id
+          if (field.replace(/\(.+\)/, "") === from) {
+            return field.replace(from, to);
+          }
+          return field;
+        });
+      }
+
+      // change index line
+      const indexLines = modekBlock.getIndexLines();
+      for (const indexLine of indexLines) {
+        indexLine.fields = indexLine.fields.map((field) => {
+          // id(sort: Desc) -> id
+          if (field.replace(/\(.+\)/, "") === from) {
+            return field.replace(from, to);
+          }
+          return field;
+        });
+      }
     } else {
       const fields = modekBlock.getFieldLines();
       for (const field of fields) {

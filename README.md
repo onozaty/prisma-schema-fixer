@@ -289,6 +289,7 @@ Rules for database-side enum names corresponding to enums.
   - `plural`: Plural
 - `func`: A custom function to transform.
   - `(value: string, target: { name: string }) => string`
+    - This allows the addition of a prefix.
 
 Using the following rule:
 

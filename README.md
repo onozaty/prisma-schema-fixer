@@ -2,13 +2,13 @@
 
 `prisma-schema-fixer` is a tool to fix Prisma schema files (`schema.prisma`) according to specified rules.
 
-## 1. Installation
+## Installation
 
 ```sh
 npm install --save-dev @onozaty/prisma-schema-fixer
 ```
 
-## 2. Usage
+## Usage
 
 Run the following command to fix your schema file using the default paths:
 
@@ -35,7 +35,7 @@ Options:
   -h, --help                      display help for command
 ```
 
-## 3. Configuration File
+## Configuration File
 
 The configuration file is used to define the rules for fixing the schema.
 The configuration file is written in .mjs format and has the following structure:
@@ -83,7 +83,7 @@ export default {
 };
 ```
 
-## 4. Rules
+## Rules
 
 ### (1) model-name
 

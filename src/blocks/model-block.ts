@@ -144,7 +144,7 @@ class StartLine implements Line {
 
 class FieldLine implements Line {
   static readonly LINE_REGEX =
-    /^(?<before>\s+)(?<name>[a-zA-Z]\w*)(?<space1>\s+)(?<type>(Unsupported\("[^"]+"\)(\[\]|\?|))|([a-zA-Z]\w*(\[\]|\?|)))((?<space2>\s+)((?<other>.+\s+)?(?<map>@map\("\w+"\))|(?<relation>@relation\([^)]+\))))?(?<after>.*)$/;
+    /^(?<before>\s+)(?<name>[a-zA-Z]\w*)(?<space1>\s+)(?<type>(Unsupported\("[^"]+"\)(\[\]|\?|))|([a-zA-Z]\w*(\[\])?\??))((?<space2>\s+)((?<other>.+\s+)?(?<map>@map\("\w+"\))|(?<relation>@relation\([^)]+\))))?(?<after>.*)$/;
 
   readonly lineItems: FieldLineItem[] = [];
 
@@ -185,14 +185,17 @@ class FieldLine implements Line {
   getFieldType(): string {
     return (this.lineItems[3] as FieldTypeItem).fileType;
   }
+  setFieldType(type: string): void {
+    (this.lineItems[3] as FieldTypeItem).fileType = type;
+  }
   getTrimedFieldType(): string {
     return this.getFieldType()
       .replace(/\(".*?"\)/, "")
       .replace("[]", "")
       .replace("?", "");
   }
-  setFieldType(type: string): void {
-    (this.lineItems[3] as FieldTypeItem).fileType = type;
+  isArrayType(): boolean {
+    return this.getFieldType().includes("[]");
   }
 
   getMap(): string | undefined {

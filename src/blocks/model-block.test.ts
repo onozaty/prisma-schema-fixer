@@ -95,14 +95,15 @@ describe("ModelBlock", () => {
     expect(field3.getRelationReferences()).toEqual(["id1", "id2"]);
   });
 
-  test("field map", () => {
+  test("field", () => {
     // Arrange
     const lines = [
       "model User {",
-      "  id        String   @id @default(uuid())",
-      '  username  String   @map("user_name")',
-      "  email     String   @unique",
-      '  createdAt DateTime @default(now()) @map("created_at")',
+      "  id          String        @id @default(uuid())",
+      '  username    String        @map("user_name")',
+      "  email       String        @unique",
+      "  permissions Permission[]?",
+      '  createdAt   DateTime      @default(now()) @map("created_at")',
       "}",
     ];
 
@@ -116,31 +117,42 @@ describe("ModelBlock", () => {
     expect(modelBlock.getMap()).toEqual(undefined);
 
     const fieldLines = modelBlock.getFieldLines();
-    expect(fieldLines).toHaveLength(4);
+    expect(fieldLines).toHaveLength(5);
     const field1 = fieldLines[0];
     expect(field1.getFieldName()).toEqual("id");
     expect(field1.getFieldType()).toEqual("String");
+    expect(field1.isArrayType()).toEqual(false);
     expect(field1.getMap()).toEqual(undefined);
     expect(field1.getRelationFields()).toEqual(undefined);
     expect(field1.getRelationReferences()).toEqual(undefined);
     const field2 = fieldLines[1];
     expect(field2.getFieldName()).toEqual("username");
     expect(field2.getFieldType()).toEqual("String");
+    expect(field2.isArrayType()).toEqual(false);
     expect(field2.getMap()).toEqual("user_name");
     expect(field2.getRelationFields()).toEqual(undefined);
     expect(field2.getRelationReferences()).toEqual(undefined);
     const field3 = fieldLines[2];
     expect(field3.getFieldName()).toEqual("email");
     expect(field3.getFieldType()).toEqual("String");
+    expect(field3.isArrayType()).toEqual(false);
     expect(field3.getMap()).toEqual(undefined);
     expect(field3.getRelationFields()).toEqual(undefined);
     expect(field3.getRelationReferences()).toEqual(undefined);
     const field4 = fieldLines[3];
-    expect(field4.getFieldName()).toEqual("createdAt");
-    expect(field4.getFieldType()).toEqual("DateTime");
-    expect(field4.getMap()).toEqual("created_at");
+    expect(field4.getFieldName()).toEqual("permissions");
+    expect(field4.getFieldType()).toEqual("Permission[]?");
+    expect(field4.isArrayType()).toEqual(true);
+    expect(field4.getMap()).toEqual(undefined);
     expect(field4.getRelationFields()).toEqual(undefined);
     expect(field4.getRelationReferences()).toEqual(undefined);
+    const field5 = fieldLines[4];
+    expect(field5.getFieldName()).toEqual("createdAt");
+    expect(field5.getFieldType()).toEqual("DateTime");
+    expect(field5.isArrayType()).toEqual(false);
+    expect(field5.getMap()).toEqual("created_at");
+    expect(field5.getRelationFields()).toEqual(undefined);
+    expect(field5.getRelationReferences()).toEqual(undefined);
   });
 
   test("Unsupported", () => {

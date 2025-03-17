@@ -173,6 +173,8 @@ Rules for field names.
   - `pascal`: PascalCase
   - `camel`: camelCase
   - `snake`: snake_case
+- `pluralize`: Specify pluralization of array type fields.
+  - `true`: If the field type is an array, make the field name plural.
 - `func`: A custom function to transform.
   - `(value: string, target: { model: string; field: string; type: string }) => string;`
 

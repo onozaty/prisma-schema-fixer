@@ -99,15 +99,42 @@ describe("apply", () => {
     ]);
   });
 
-  test("case & func", () => {
+  test("pluralize", () => {
+    // Arrange
+    const configs: FieldNameRule.Config[] = [{ pluralize: true }];
+    const blocks: Block[] = [
+      new ModelBlock([
+        "model User {",
+        "  id     Int   @id @default(autoincrement())",
+        "  number Int[]",
+        "  string String[]?",
+        "}",
+      ]),
+    ];
+
+    // Act
+    FieldNameRule.apply(configs, blocks);
+
+    // Assert
+    expect(blocks[0].getLines()).toEqual([
+      "model User {",
+      "  id     Int   @id @default(autoincrement())",
+      "  numbers Int[]",
+      "  strings String[]?",
+      "}",
+    ]);
+  });
+
+  test("case & pluralize & func", () => {
     // Arrange
     const configs: FieldNameRule.Config[] = [
-      { case: "snake", func: (v) => v.toUpperCase() },
+      { case: "snake", pluralize: true, func: (v) => v.toUpperCase() },
     ];
     const blocks: Block[] = [
       new ModelBlock([
         "model User {",
         "  Id        Int      @id @default(autoincrement())",
+        "  number    Int[]",
         "  CreatedAt DateTime @default(now())",
         "}",
       ]),
@@ -126,6 +153,7 @@ describe("apply", () => {
     expect(blocks[0].getLines()).toEqual([
       "model User {",
       "  ID        Int      @id @default(autoincrement())",
+      "  NUMBERS    Int[]",
       "  CREATED_AT DateTime @default(now())",
       "}",
     ]);

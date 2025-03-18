@@ -24,10 +24,10 @@ export namespace FieldMapRule {
       const fields = modelBlock.getFieldLines();
 
       for (const field of fields) {
-        const trimedFieldType = field.getTrimedFieldType();
+        const fieldTypeBaseName = field.getFieldTypeBaseName();
         if (
-          PRIMITIVE_TYPES.includes(trimedFieldType) ||
-          enumNames.includes(trimedFieldType)
+          PRIMITIVE_TYPES.includes(fieldTypeBaseName) ||
+          enumNames.includes(fieldTypeBaseName)
         ) {
           const fieldName = field.getFieldName();
           const config = selectConfigByField(configs, modelName, fieldName);

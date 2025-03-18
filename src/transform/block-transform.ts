@@ -17,7 +17,7 @@ export const changeModelName = (
     const fields = modelBlock.getFieldLines();
     for (const field of fields) {
       const beforeFileType = field.getFieldType();
-      if (field.getTrimedFieldType() === from) {
+      if (field.getFieldTypeBaseName() === from) {
         // keep array and nullable
         field.setFieldType(beforeFileType.replace(from, to));
       }
@@ -87,7 +87,7 @@ export const changeFieldName = (
       const fields = modekBlock.getFieldLines();
       for (const field of fields) {
         // change relation references
-        if (field.getTrimedFieldType() === modelName) {
+        if (field.getFieldTypeBaseName() === modelName) {
           const relationReferences = field.getRelationReferences();
           if (
             relationReferences !== undefined &&
@@ -122,7 +122,7 @@ export const changeEnumName = (
     const fields = modelBlock.getFieldLines();
     for (const field of fields) {
       const beforeFileType = field.getFieldType();
-      if (field.getTrimedFieldType() === from) {
+      if (field.getFieldTypeBaseName() === from) {
         // keep array and nullable
         field.setFieldType(beforeFileType.replace(from, to));
       }

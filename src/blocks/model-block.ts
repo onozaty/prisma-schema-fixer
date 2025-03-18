@@ -188,7 +188,7 @@ class FieldLine implements Line {
   setFieldType(type: string): void {
     (this.lineItems[3] as FieldTypeItem).fileType = type;
   }
-  getTrimedFieldType(): string {
+  getFieldTypeBaseName(): string {
     return this.getFieldType()
       .replace(/\(".*?"\)/, "")
       .replace("[]", "")

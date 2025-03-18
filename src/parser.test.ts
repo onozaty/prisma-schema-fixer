@@ -56,7 +56,7 @@ describe("parseBlocks", () => {
         "  createdAt DateTime @default(now())",
         "  updatedAt DateTime @updatedAt",
         "  published Boolean  @default(false)",
-        "  title     String   @db.VarChar(255)",
+        "  title     String",
         "  author    User?    @relation(fields: [author_id], references: [id])",
         "  author_id Int?",
         "}",

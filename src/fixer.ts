@@ -2,6 +2,7 @@ import { Config } from "./config";
 import { joinBlocks, parseBlocks } from "./parser";
 import { EnumMapRule } from "./rules/enum-map-rule";
 import { EnumNameRule } from "./rules/enuml-name-rule";
+import { FieldAttributeRule } from "./rules/field-attribute-rule";
 import { FieldMapRule } from "./rules/field-map-rule";
 import { FieldNameRule } from "./rules/field-name-rule";
 import { ModelMapRule } from "./rules/model-map-rule";
@@ -26,6 +27,10 @@ export const fix = async (content: string, config: Config): Promise<string> => {
   if (config.rules["field-map"] !== undefined) {
     const configs = config.rules["field-map"];
     FieldMapRule.apply(configs, blocks);
+  }
+  if (config.rules["field-attribute"] !== undefined) {
+    const configs = config.rules["field-attribute"];
+    FieldAttributeRule.apply(configs, blocks);
   }
   if (config.rules["enum-name"] !== undefined) {
     const configs = config.rules["enum-name"];

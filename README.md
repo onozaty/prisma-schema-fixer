@@ -320,6 +320,44 @@ enum Role {
 }
 ```
 
+### (7) field-attribute
+
+Rules for automatically adding attributes to fields based on their type.
+
+- `typeToAttributes`: Specify a mapping from field types to a list of attributes to add.
+  - Keys are field types (e.g. `"String"`, `"Int"`, `"DateTime"`)
+  - Values are arrays of attribute strings to add to fields of that type
+- `targets`: Target specific fields to apply this rule using the standard targeting options.
+
+Using the following rule:
+
+```js
+export default {
+  rules: {
+    "field-attribute": [
+      {
+        typeToAttributes: {
+          "DateTime": ["@db.Timestamptz()"],
+          "String": ["@db.VarChar(255)"]
+        }
+      },
+    ],
+  },
+};
+```
+
+The `schema.prisma` will be fixed as follows:
+
+```diff
+model User {
+  id        Int      @id @default(autoincrement())
+- createdAt DateTime @default(now())
++ createdAt DateTime @default(now()) @db.Timestamptz()
+- name      String
++ name      String   @db.VarChar(255)
+}
+```
+
 ### Targets
 
 Specify the targets for the rules. This can be used to apply rules to specific models, fields, or enums.

@@ -22,6 +22,13 @@ export default {
         case: "snake",
       },
     ],
+    "field-attribute": [
+      {
+        typeToAttributes: {
+          DateTime: ["@db.Timestamptz()"],
+        },
+      },
+    ],
     "enum-name": [
       {
         case: "pascal",

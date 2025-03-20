@@ -171,6 +171,11 @@ class FieldLine implements Line {
     }
   }
 
+  private addItemsAfterType(...items: FieldLineItem[]): void {
+    // insert map item after the field type
+    this.lineItems.splice(4, 0, ...items);
+  }
+
   toString(): string {
     return this.lineItems.map((item) => item.toString()).join("");
   }
@@ -188,11 +193,14 @@ class FieldLine implements Line {
   setFieldType(type: string): void {
     (this.lineItems[3] as FieldTypeItem).fileType = type;
   }
-  getTrimedFieldType(): string {
+  getFieldTypeBaseName(): string {
     return this.getFieldType()
       .replace(/\(".*?"\)/, "")
       .replace("[]", "")
       .replace("?", "");
+  }
+  getFieldTypeNonNullable(): string {
+    return this.getFieldType().replace(/\?$/, "");
   }
   isArrayType(): boolean {
     return this.getFieldType().includes("[]");
@@ -213,15 +221,7 @@ class FieldLine implements Line {
         return;
       }
       mapItem = new MapItem();
-
-      // insert map item after the field type
-      this.lineItems.splice(
-        4,
-        0,
-        new OtherItem(" "),
-        mapItem,
-        new OtherItem(" "),
-      );
+      this.addItemsAfterType(new OtherItem(" "), mapItem, new OtherItem(" "));
     }
     mapItem.map = map;
   }
@@ -256,6 +256,13 @@ class FieldLine implements Line {
       throw new Error("Relation item not found");
     }
     relationItem.references = references;
+  }
+
+  addAttributeIfNotExists(attribute: string): void {
+    if (this.toString().includes(attribute)) {
+      return;
+    }
+    this.addItemsAfterType(new OtherItem(` ${attribute} `));
   }
 }
 

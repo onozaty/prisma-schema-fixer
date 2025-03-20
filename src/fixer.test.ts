@@ -82,6 +82,40 @@ describe("fix", () => {
     // Assert
     expect(result).toMatchSnapshot();
   });
+  test("field-attribute", async () => {
+    // Arrange
+    const content = readFixture("simple.prisma");
+    const config = defineConfig({
+      rules: {
+        "field-attribute": [
+          {
+            typeToAttributes: {
+              DateTime: ["@db.Timestamptz()"],
+              String: ["@db.Text"],
+            },
+          },
+          {
+            targets: { field: "createdAt" },
+            typeToAttributes: {
+              DateTime: ["@db.Timestamptz()", "@default(now())"],
+            },
+          },
+          {
+            targets: { field: "updatedAt" },
+            typeToAttributes: {
+              DateTime: ["@db.Timestamptz()", "@updatedAt"],
+            },
+          },
+        ],
+      },
+    });
+
+    // Act
+    const result = await fix(content, config);
+
+    // Assert
+    expect(result).toMatchSnapshot();
+  });
   test("enum-name", async () => {
     // Arrange
     const content = readFixture("simple.prisma");

@@ -365,6 +365,33 @@ model User {
 }
 ```
 
+You can also add `@updatedAt` uniformly to fields named `updatedAt`.
+
+```js
+export default {
+  rules: {
+    "field-attribute": [
+      {
+        targets: { field: "updatedAt" },
+        typeToAttributes: {
+          DateTime: ["@updatedAt"],
+        },
+      },
+    ],
+  },
+};
+```
+
+```diff
+model User {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+- updatedAt DateTime
++ updatedAt DateTime @updatedAt
+  name      String
+}
+```
+
 ### Targets
 
 Specify the targets for the rules. This can be used to apply rules to specific models, fields, or enums.

@@ -1,5 +1,9 @@
 # prisma-schema-fixer
 
+[![Test](https://github.com/onozaty/prisma-schema-fixer/actions/workflows/test.yaml/badge.svg)](https://github.com/onozaty/prisma-schema-fixer/actions/workflows/test.yaml)
+[![codecov](https://codecov.io/gh/onozaty/prisma-schema-fixer/graph/badge.svg?token=406L0D8MI0)](https://codecov.io/gh/onozaty/prisma-schema-fixer)
+[![npm version](https://badge.fury.io/js/@onozaty%2Fprisma-schema-fixer.svg)](https://badge.fury.io/js/@onozaty%2Fprisma-schema-fixer)
+
 `prisma-schema-fixer` is a tool to fix Prisma schema files (`schema.prisma`) according to specified rules.
 
 ## Installation

@@ -15,6 +15,7 @@
     "build": "rm -rf dist/ && tsc --emitDeclarationOnly && node build.js",
     "prepare": "pnpm run build",
     "test": "vitest run",
+    "test:cov": "vitest run --coverage",
     "lint": "eslint ."
   },
   "repository": {

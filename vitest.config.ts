@@ -6,6 +6,7 @@ export default defineConfig({
     coverage: {
       include: ["src/**/*.ts"],
       exclude: ["**/*.test.ts"],
+      reporter: ["json", "text"],
     },
   },
 });

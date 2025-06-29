@@ -20,6 +20,12 @@ Run the following command to fix your schema file using the default paths:
 npx prisma-schema-fixer
 ```
 
+If no configuration file exists, you'll be prompted to create one with recommended settings automatically:
+
+```
+Configuration file not found. Would you like to create schema-fixer.config.mjs with recommended settings? (y/N):
+```
+
 Run the following command to fix your schema file with specified paths:
 
 ```sh
@@ -94,57 +100,19 @@ export default {
 };
 ```
 
-### Recommended Configuration
-
-If you're unsure about the rules to use, you can start with the example below.  
-Save it in the same directory as `schema.prisma` with the filename `schema-fixer.config.mjs`.
-
-```js
-// @ts-check
-/** @type {import("@onozaty/prisma-schema-fixer").Config} */
-export default {
-  rules: {
-    "model-name": [
-      {
-        case: "pascal",
-        form: "singular",
-      },
-    ],
-    "model-map": [
-      {
-        case: "snake",
-        form: "plural",
-      },
-    ],
-    "field-name": [
-      {
-        case: "camel",
-      },
-    ],
-    "field-map": [
-      {
-        case: "snake",
-      },
-    ],
-    "enum-name": [
-      {
-        case: "pascal",
-        form: "singular",
-      },
-    ],
-    "enum-map": [
-      {
-        case: "snake",
-        form: "plural",
-      },
-    ],
-  },
-};
-```
 
 ## Rules
 
-### (1) model-name
+- [model-name](#model-name) - Rules for model names
+- [model-map](#model-map) - Rules for table names corresponding to models
+- [field-name](#field-name) - Rules for field names
+- [field-map](#field-map) - Rules for column names corresponding to fields
+- [enum-name](#enum-name) - Rules for enum names
+- [enum-map](#enum-map) - Rules for database-side enum names corresponding to enums
+- [field-attribute](#field-attribute) - Rules for automatically adding attributes to fields based on their type
+- [Targets](#targets) - Specify the targets for the rules
+
+### model-name
 
 Rules for model names.
 
@@ -183,7 +151,7 @@ The `schema.prisma` will be fixed as follows:
 }
 ```
 
-### (2) model-map
+### model-map
 
 Rules for table names corresponding to models.
 
@@ -224,7 +192,7 @@ model UserProfile {
 }
 ```
 
-### (3) field-name
+### field-name
 
 Rules for field names.
 
@@ -263,7 +231,7 @@ model Post {
 }
 ```
 
-### (4) field-map
+### field-map
 
 Rules for column names corresponding to fields.
 
@@ -298,7 +266,7 @@ model User {
 }
 ```
 
-### (5) enum-name
+### enum-name
 
 Rules for enum names.
 
@@ -337,7 +305,7 @@ The `schema.prisma` will be fixed as follows:
 }
 ```
 
-### (6) enum-map
+### enum-map
 
 Rules for database-side enum names corresponding to enums.
 
@@ -379,7 +347,7 @@ enum Role {
 }
 ```
 
-### (7) field-attribute
+### field-attribute
 
 Rules for automatically adding attributes to fields based on their type.
 

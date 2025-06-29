@@ -1,4 +1,5 @@
 import esbuild from "esbuild";
+import fs from "fs";
 
 await esbuild.build({
   entryPoints: ["src/cli.ts"],
@@ -9,3 +10,9 @@ await esbuild.build({
   format: "esm",
   sourcemap: true,
 });
+
+// Copy template file to dist
+fs.copyFileSync(
+  "src/default-config.mjs.template",
+  "dist/default-config.mjs.template",
+);

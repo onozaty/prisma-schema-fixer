@@ -2,7 +2,8 @@
 import { Command } from "commander";
 import fs from "fs";
 import { dirname, join, resolve } from "path";
-import { pathToFileURL } from "url";
+import { pathToFileURL, fileURLToPath } from "url";
+import { createInterface } from "readline";
 import { version } from "../package.json";
 import { Config } from "./config";
 import { fix } from "./fixer";
@@ -45,6 +46,35 @@ const getDefaultConfigPath = (schemaFilePath: string): string => {
   return join(schemaDir, "schema-fixer.config.mjs");
 };
 
+const promptUser = (question: string): Promise<string> => {
+  const rl = createInterface({
+    input: process.stdin,
+    output: process.stdout,
+  });
+
+  return new Promise((resolve) => {
+    rl.question(question, (answer) => {
+      rl.close();
+      resolve(answer.trim());
+    });
+  });
+};
+
+const createDefaultConfigFile = (configFilePath: string): void => {
+  const __filename = fileURLToPath(import.meta.url);
+  const __dirname = dirname(__filename);
+  const templatePath = join(__dirname, "default-config.mjs.template");
+  
+  const defaultConfig = fs.readFileSync(templatePath, "utf-8");
+
+  const absolutePath = toAbsoultePath(configFilePath);
+  const dir = dirname(absolutePath);
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir, { recursive: true });
+  }
+  fs.writeFileSync(absolutePath, defaultConfig, "utf-8");
+};
+
 const run = async () => {
   const program = new Command();
   program
@@ -73,7 +103,28 @@ const run = async () => {
 
   try {
     const content = readPrismaSchema(options.file);
-    const config = await loadConfigFile(options.configFile);
+    
+    let config: Config;
+    try {
+      config = await loadConfigFile(options.configFile);
+    } catch (error) {
+      if (error instanceof Error && error.message.includes("Configuration file not found")) {
+        const answer = await promptUser(
+          "Configuration file not found. Would you like to create schema-fixer.config.mjs with recommended settings? (y/N): "
+        );
+        
+        if (answer.toLowerCase() === "y") {
+          createDefaultConfigFile(options.configFile);
+          console.log(`✨ Configuration file created: ${options.configFile}`);
+          config = await loadConfigFile(options.configFile);
+        } else {
+          process.exit(0);
+        }
+      } else {
+        throw error;
+      }
+    }
+
     const fixedContent = await fix(content, config);
 
     if (options.dryRun) {

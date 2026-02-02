@@ -2,33 +2,44 @@ name: Test
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
+  pull_request:
+    branches: [main]
 
 jobs:
   test:
     runs-on: ubuntu-latest
+
     strategy:
       matrix:
-        node-version: [20]
+        node-version: [18, 20, 22, 24]
+
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
+
       - name: Install pnpm
         uses: pnpm/action-setup@v4
-        with:
-          version: 10
+
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: ${{ matrix.node-version }}
           cache: "pnpm"
+
       - name: Install dependencies
-        run: pnpm install
-      - name: Run unit tests
+        run: pnpm install --frozen-lockfile
+
+      - name: Run checks (lint & typecheck)
+        run: pnpm run check
+
+      - name: Run tests with coverage
         run: pnpm run test:cov
+
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v5
         with:
-          slug: onozaty/prisma-schema-fixer
           token: ${{ secrets.CODECOV_TOKEN }}
-          files: ./coverage/coverage-final.json
+          file: ./coverage/coverage-final.json
+
+      - name: Build
+        run: pnpm run build

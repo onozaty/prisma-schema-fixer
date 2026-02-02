@@ -13,12 +13,11 @@
   ],
   "scripts": {
     "build": "rm -rf dist/ && tsc --emitDeclarationOnly && node build.js",
-    "prepublishOnly": "pnpm run check && pnpm run build",
     "test": "vitest run",
     "test:cov": "vitest run --coverage",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
-    "check": "pnpm run lint && pnpm run typecheck && pnpm run test",
+    "check": "pnpm run lint && pnpm run typecheck",
     "format": "prettier --write src/**/*.ts"
   },
   "repository": {
@@ -34,6 +33,7 @@
     "url": "https://github.com/onozaty/prisma-schema-fixer/issues"
   },
   "homepage": "https://github.com/onozaty/prisma-schema-fixer#readme",
+  "packageManager": "pnpm@10.12.4",
   "dependencies": {
     "@prisma/internals": "^5.0.0 || ^6.0.0 || ^7.0.0",
     "change-case": "^5.4.4",

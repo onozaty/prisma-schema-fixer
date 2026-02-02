@@ -35,7 +35,7 @@
   },
   "homepage": "https://github.com/onozaty/prisma-schema-fixer#readme",
   "dependencies": {
-    "@prisma/internals": "^5.0.0 || ^6.0.0",
+    "@prisma/internals": "^5.0.0 || ^6.0.0 || ^7.0.0",
     "change-case": "^5.4.4",
     "commander": "^13.1.0",
     "pluralize": "^8.0.0"

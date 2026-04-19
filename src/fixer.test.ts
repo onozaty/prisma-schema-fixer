@@ -204,6 +204,25 @@ describe("fix", () => {
     // Assert
     expect(result).toMatchSnapshot();
   });
+
+  test("field-name with @@index map option (issue #13)", async () => {
+    // Arrange
+    const content = readFixture("index-with-map.prisma");
+    const config = defineConfig({
+      rules: {
+        "model-name": [{ case: "pascal" }],
+        "model-map": [{ case: "snake" }],
+        "field-name": [{ case: "camel" }],
+        "field-map": [{ case: "snake" }],
+      },
+    });
+
+    // Act
+    const result = await fix(content, config);
+
+    // Assert
+    expect(result).toMatchSnapshot();
+  });
 });
 
 const readFixture = (name: string): string => {

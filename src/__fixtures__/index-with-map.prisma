@@ -1,0 +1,15 @@
+model session_log {
+  id      Int       @id(map: "session_log_pk") @default(autoincrement())
+  user_id String    @db.Uuid
+  reg_at  DateTime? @default(now()) @db.Timestamp(6)
+
+  @@index([user_id], map: "user_id_idx")
+}
+
+model user {
+  id      Int       @id(map: "user_pk") @default(autoincrement())
+  user_id String    @db.Uuid
+  reg_at  DateTime? @default(now()) @db.Timestamp(6)
+
+  @@index([user_id])
+}

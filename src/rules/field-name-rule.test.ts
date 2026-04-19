@@ -308,4 +308,34 @@ describe("apply", () => {
       "}",
     ]);
   });
+
+  test("@@index with map option (issue #13)", () => {
+    // Arrange
+    const configs: FieldNameRule.Config[] = [{ case: "camel" }];
+    const blocks: Block[] = [
+      new ModelBlock([
+        "model SessionLog {",
+        '  id      Int       @id(map: "session_log_pk") @default(autoincrement())',
+        "  user_id String    @db.Uuid",
+        "  reg_at  DateTime? @default(now()) @db.Timestamp(6)",
+        "",
+        '  @@index([user_id], map: "user_id_idx")',
+        "}",
+      ]),
+    ];
+
+    // Act
+    FieldNameRule.apply(configs, blocks);
+
+    // Assert
+    expect(blocks[0].getLines()).toEqual([
+      "model SessionLog {",
+      '  id      Int       @id(map: "session_log_pk") @default(autoincrement())',
+      "  userId String    @db.Uuid",
+      "  regAt  DateTime? @default(now()) @db.Timestamp(6)",
+      "",
+      '  @@index([userId], map: "user_id_idx")',
+      "}",
+    ]);
+  });
 });

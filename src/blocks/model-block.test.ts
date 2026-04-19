@@ -261,4 +261,31 @@ describe("ModelBlock", () => {
     expect(field3.getRelationFields()).toEqual(undefined);
     expect(field3.getRelationReferences()).toEqual(undefined);
   });
+
+  test("@@id, @@unique, @@index with map option", () => {
+    // Arrange
+    const lines = [
+      "model X {",
+      "  id1 Int",
+      "  id2 Int",
+      "  id3 Int",
+      "",
+      '  @@id([id1, id2], map: "x_pk")',
+      '  @@unique([id1], map: "x_unique")',
+      '  @@index([id2, id3], map: "x_idx")',
+      "}",
+    ];
+
+    // Act
+    const modelBlock = new ModelBlock();
+    lines.forEach((line) => modelBlock.appendLine(line));
+
+    // Assert
+    expect(modelBlock.getLines()).toEqual(lines);
+    expect(modelBlock.getIdLine()?.fields).toEqual(["id1", "id2"]);
+    expect(modelBlock.getUniqueLines().map((x) => x.fields)).toEqual([["id1"]]);
+    expect(modelBlock.getIndexLines().map((x) => x.fields)).toEqual([
+      ["id2", "id3"],
+    ]);
+  });
 });

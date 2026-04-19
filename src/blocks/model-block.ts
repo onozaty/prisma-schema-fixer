@@ -303,7 +303,7 @@ class MapLine implements Line {
 
 class IdLine implements Line {
   static readonly LINE_REGEX =
-    /^(?<before>\s+@@id\(\[)(?<fields>[^[]+)(?<after>\]\).*)$/;
+    /^(?<before>\s+@@id\(\[)(?<fields>[^[]+)(?<after>\].*)$/;
 
   private readonly before: string;
   fields: string[];
@@ -321,7 +321,7 @@ class IdLine implements Line {
 
 class UniqueLine implements Line {
   static readonly LINE_REGEX =
-    /^(?<before>\s+@@unique\(\[)(?<fields>[^[]+)(?<after>\]\).*)$/;
+    /^(?<before>\s+@@unique\(\[)(?<fields>[^[]+)(?<after>\].*)$/;
 
   private readonly before: string;
   fields: string[];
@@ -339,7 +339,7 @@ class UniqueLine implements Line {
 
 class IndexLine implements Line {
   static readonly LINE_REGEX =
-    /^(?<before>\s+@@index\(\[)(?<fields>[^[]+)(?<after>\]\).*)$/;
+    /^(?<before>\s+@@index\(\[)(?<fields>[^[]+)(?<after>\].*)$/;
 
   private readonly before: string;
   fields: string[];

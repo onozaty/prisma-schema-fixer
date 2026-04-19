@@ -274,6 +274,27 @@ enum Role {
 "
 `;
 
+exports[`fix > field-name with @@index map option (issue #13) 1`] = `
+"model SessionLog {
+  id     Int       @id(map: "session_log_pk") @default(autoincrement())
+  userId String    @map("user_id") @db.Uuid
+  regAt  DateTime? @default(now()) @map("reg_at") @db.Timestamp(6)
+
+  @@index([userId], map: "user_id_idx")
+  @@map("session_log")
+}
+
+model User {
+  id     Int       @id(map: "user_pk") @default(autoincrement())
+  userId String    @map("user_id") @db.Uuid
+  regAt  DateTime? @default(now()) @map("reg_at") @db.Timestamp(6)
+
+  @@index([userId])
+  @@map("user")
+}
+"
+`;
+
 exports[`fix > model-map 1`] = `
 "datasource db {
   provider = "postgresql"
